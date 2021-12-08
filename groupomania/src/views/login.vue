@@ -17,7 +17,7 @@
           <input v-model="password" id="password" type="password" placeholder="  Mot de passe" required />
         </div>
         <button v-if="mode == 'login'" :class="{'disabled__btn' : !validated}" @click="loginAccount()">Connexion</button>
-        <button v-if="mode == 'create'"  :class="{'disabled__btn' : !validated}" @click="createAccount()">Inscription</button>
+        <button v-if="mode == 'create'"  :class="{'disabled__btn' : !validated}" @click.prevent="createAccount()">Inscription</button>
       </form>
       <p v-if="mode == 'login'">Pas encore inscrit ? <span class="createAccountBtn" @click="createAccountSwitch()">Créer un compte</span></p>
       <p v-if="mode == 'create'">Déjà inscrit ? <span class="createAccountBtn" @click="loginAccountSwitch()">Se connecter</span></p>
@@ -62,6 +62,7 @@ export default {
             this.mode = 'login';
         },
         createAccount: function () {
+            
             this.$store.dispatch('createAccount', {
                 email: this.email,
                 name: this.name,
@@ -74,6 +75,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 .login {
   background-color: #ccffcc;
   height: 100vh;

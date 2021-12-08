@@ -75,6 +75,10 @@
   font-family: 'Readex Pro', sans-serif;
 }
 
+body {
+  background-color : #ccffcc;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -87,7 +91,7 @@
   overflow: hidden;
   font-size: 1rem;
   position: absolute;
-  box-shadow: 0 5px 10px grey;
+  box-shadow: 0 3px 10px red;
   background-color: white;
   top: 0;
   width: 100vw;

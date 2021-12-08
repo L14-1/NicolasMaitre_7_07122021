@@ -17,8 +17,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.home {
-  margin-top : 8rem;
-}
+<style scoped lang="scss">
+  .home {
+    margin-top : 8rem;
+  }
 </style>
