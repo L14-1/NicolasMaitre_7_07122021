@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 const axios = require('axios');
 
 const instance = axios.create({
-  baseURL: 'https://api.example.com'
+  baseURL: 'http://localhost:3000/'
 });
 
 Vue.use(Vuex)
@@ -20,9 +20,9 @@ export default new Vuex.Store({
 
       console.log(userInfos);
 
-      instance.post('/createAccount', userInfos)
-      .then(function (response) {
-        console.log(response);
+      instance.post('/signup', userInfos)
+      .then(function (res) {
+        console.log(res);
       })
       .catch(function (error) {
         console.log(error);

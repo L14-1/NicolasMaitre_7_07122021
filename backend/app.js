@@ -1,26 +1,34 @@
-const express = require('express');
-const mysql = require('mysql');
-
-// create connection
-
-const db = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : '#',
-    database : 'groupomania'
-});
-
-// connect
-
-db.connect((err) => {
-    if(err){
-        throw err;
-    }
-    console.log('mysql Connected...');
-});
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const app = express();
 
-app.listen('3000', () => {
-    console.log('server started on port 3000');
+var corsOptions = {
+  origin: "http://localhost:3001"
+};
+
+app.use(cors(corsOptions));
+
+// parse requests of content-type - application/json
+app.use(bodyParser.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const db = require("./app/models");
+
+db.sequelize.sync({ force: true }).then(() => {
+    console.log("Drop and re-sync db.");
+  });
+
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to Groupomania backend !" });
+});
+
+// set port, listen for requests
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });

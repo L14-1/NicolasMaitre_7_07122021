@@ -76,7 +76,7 @@
 }
 
 body {
-  background-color : #ccffcc;
+  background-color : #f2f2f2;
 }
 
 #app {

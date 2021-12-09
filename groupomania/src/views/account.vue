@@ -81,6 +81,7 @@
     &__onePost {
       margin-top: 2rem;
       padding: 1rem 0;
+      // border: 2px #9e9a9a solid;
       border-radius: 1rem;
       background-color: white;
       width: 90vw;
@@ -108,11 +109,12 @@
       }
       &--btns {
         display: flex;
-        border: 2px #ccffcc solid;
+        border-top: 2px #9e9a9a solid;
+        border-bottom: 2px #9e9a9a solid;
         cursor: pointer;
         &__like {
           width: 50%;
-          border-right: 2px #ccffcc solid;
+          border-right: 2px #9e9a9a solid;
           &:hover {
             color: green;
           }
@@ -157,7 +159,6 @@
           margin-bottom: 0.5rem;
           height: 2rem;
           border-radius: 0.5rem;
-          border: 2px #9e9a9a solid;
         }
         button {
           width : 15%;
@@ -166,6 +167,7 @@
         }
         input {
           width : 80%;
+          border: 2px #9e9a9a solid;
         }
       }
     }
