@@ -3,7 +3,7 @@
     <div class="login_container">
       <img
         alt="Groupomania logo"
-        src="../assets/icon-left-font-monochrome-black.svg"
+        src="../assets/icon-left-font-monochrome-white.svg"
       />
       <form>
         <div>
@@ -77,14 +77,14 @@ export default {
 <style lang="scss">
 
 .login {
-  background-color: #ccffcc;
+  // background-color: #ccffcc;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   .login_container {
-      width : 25rem;
-    background-color: white;
+    width : 25rem;
+    background-color: #161b22;
     border-radius: 1rem;
     padding: 2rem;
     img {
@@ -97,6 +97,8 @@ export default {
       height: 2rem;
       border-radius: 0.5rem;
       border: 2px #9e9a9a solid;
+      background-color: #555658;
+      color : #acb8c8;
     }
     button {
         border: 2px #00b300 solid;
