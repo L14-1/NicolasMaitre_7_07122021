@@ -12,12 +12,27 @@
         <div>
           <input v-model="name" id="name" placeholder="  Prénom" required v-if="mode == 'create'" />
         </div>
-            <input v-model="lastName" id="lastname" placeholder="  Nom" required v-if="mode == 'create'"/>
+            <input v-model="lastname" id="lastname" placeholder="  Nom" required v-if="mode == 'create'"/>
         <div>
           <input v-model="password" id="password" type="password" placeholder="  Mot de passe" required />
         </div>
-        <button v-if="mode == 'login'" :class="{'disabled__btn' : !validated}" @click="loginAccount()">Connexion</button>
-        <button v-if="mode == 'create'"  :class="{'disabled__btn' : !validated}" @click.prevent="createAccount()">Inscription</button>
+
+        <div class="invalid-login-info" v-if="mode == 'login' && status == 'error_login'">
+          Adresse mail et/ou mot de passe invalide
+        </div>
+        <div class="invalid-login-info" v-if="mode == 'create' && status == 'error_create'">
+          Adresse mail déjà utilisé
+        </div>
+
+        <button v-if="mode == 'login'" :class="{'disabled__btn' : !validated}" @click.prevent="loginAccount()">
+          <span v-if="status == 'loading'">Connexion en cours...</span>
+          <span v-else >Connexion</span>
+        </button>
+        <button v-if="mode == 'create'"  :class="{'disabled__btn' : !validated}" @click.prevent="createAccount()">
+          <span v-if="status == 'loading'">Inscription en cours...</span>
+          <span v-else >Inscription</span>
+        </button>
+
       </form>
       <p v-if="mode == 'login'">Pas encore inscrit ? <span class="createAccountBtn" @click="createAccountSwitch()">Créer un compte</span></p>
       <p v-if="mode == 'create'">Déjà inscrit ? <span class="createAccountBtn" @click="loginAccountSwitch()">Se connecter</span></p>
@@ -26,6 +41,9 @@
 </template>
 
 <script>
+
+import { mapState } from 'vuex';
+
 export default {
     name: 'login',
     data: function () {
@@ -33,14 +51,20 @@ export default {
             mode: 'login',
             email: '',
             name: '',
-            lastName: '',
+            lastname: '',
             password: '',
         }
     },
+    mounted: function () {
+    if (this.$store.state.user.userId != -1) {
+      this.$router.push('/account');
+      return;
+    }
+  },
     computed: {
         validated: function () {
             if (this.mode == 'create') {
-                if (this.email != "" && this.name != "" && this.lastName != "" && this.password != "") {
+                if (this.email != "" && this.name != "" && this.lastname != "" && this.password != "") {
                     return true;
                 } else {
                     return false;
@@ -52,23 +76,39 @@ export default {
                     return false;
                 }
             }
-        }
+        },
+        ...mapState(['status'])
     },
     methods: {
         createAccountSwitch: function () {
-            this.mode = 'create';
+          this.mode = 'create';
         },
         loginAccountSwitch: function () {
-            this.mode = 'login';
+          this.mode = 'login';
+        },
+        loginAccount: function () {
+          const self = this;
+          this.$store.dispatch('loginAccount', {
+            email: this.email,
+            password: this.password,
+          }).then(function () {
+            self.$router.push('/account');
+          }, function (error) {
+            console.log(error);
+          })
         },
         createAccount: function () {
-            
-            this.$store.dispatch('createAccount', {
-                email: this.email,
-                name: this.name,
-                lastName: this.lastName,
-                password: this.password,
-            })
+          const self = this;
+          this.$store.dispatch('createAccount', {
+              email: this.email,
+              name: this.name,
+              lastname: this.lastname,
+              password: this.password,
+          }).then(function () {
+            self.loginAccount();
+          }, function (error) {
+            console.log(error);
+          })
         }
     }
 }
@@ -90,6 +130,9 @@ export default {
     img {
       width: 10rem;
       margin-bottom: 2rem;
+    }
+    .invalid-login-info {
+      margin : 1rem 0;
     }
     input, button {
       margin-bottom: 0.5rem;

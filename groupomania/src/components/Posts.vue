@@ -1,6 +1,5 @@
 <template>
   <div class="recentPost">
-    <!-- <p>Mes derniers posts :</p> -->
     <div class="recentPost__onePost">
       <div class="recentPost__onePost--user">
         <div class="recentPost__onePost--user__pic">
@@ -13,12 +12,10 @@
       </div>
       <div class="recentPost__onePost--btns">
         <div class="recentPost__onePost--btns__like">
-          <!-- <i class="fas fa-thumbs-up"></i> -->
-          <p>like</p>
+          <font-awesome-icon :icon="['fas', 'thumbs-up']" />
         </div>
         <div class="recentPost__onePost--btns__dislike">
-          <!-- <i class="far fa-thumbs-down"></i> -->
-          <p>dislike</p>
+          <font-awesome-icon :icon="['fas', 'thumbs-down']" />
         </div>
       </div>
       <div class="recentPost__onePost--comments">
@@ -40,7 +37,7 @@
   </div>
 </template>
 
-//
+
 <script>
 // export default {
 //   name: 'HelloWorld',
@@ -86,12 +83,9 @@
     }
     &--btns {
       display: flex;
-      border-top: 1px #9e9a9a solid;
-      border-bottom: 1px #9e9a9a solid;
       cursor: pointer;
       &__like {
         width: 50%;
-        border-right: 1px #9e9a9a solid;
         &:hover {
           color: green;
         }
@@ -101,6 +95,14 @@
         &:hover {
           color: red;
         }
+      }
+      &::before, &::after {
+        content: '';
+        position: relative;
+        top: 0.5rem;
+        width : 70vw;
+        height: 1px;
+        background-color: #9e9a9a;
       }
     }
     &--comments {
@@ -142,7 +144,13 @@
       button {
         width: 15%;
         border: 1px #00b300 solid;
-        cursor: pointer;
+        transition: all 0.5s ease-out;
+        &:hover {
+          cursor : pointer;
+          background-color: #00b300;
+          border: 1px #9e9a9a solid;
+          transition: all 0.5s ease-out;
+        }
       }
       input {
         width: 80%;
