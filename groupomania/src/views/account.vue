@@ -20,6 +20,12 @@
 
 <script>
 // @ is an alias to /src
+
+// +-----------------------------------------------------------------------+
+// |  TODO possibilité de modifier le profil (bio / image / nom / prénom)  |
+// +-----------------------------------------------------------------------+
+
+
 import { mapState } from 'vuex'
 import Posts from '@/components/Posts.vue'
 

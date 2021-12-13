@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Users', {
+    return queryInterface.createTable('Users', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -25,6 +25,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       bio: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      imageUrl: {
         allowNull: true,
         type: Sequelize.STRING
       },
