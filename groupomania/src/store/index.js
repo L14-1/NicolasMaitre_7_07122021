@@ -40,7 +40,11 @@ export default new Vuex.Store({
     },
     postInfos: {
       content: '',
-    }
+    },
+    modifiedUserInfos: {
+      bio: '',
+    },
+    allPosts: [],
   },
   mutations: {
     setStatus: function (state, status) {
@@ -60,6 +64,9 @@ export default new Vuex.Store({
         token: '',
       }
       localStorage.removeItem('user');
+    },
+    allPosts: function (state, allPosts) {
+      state.allPosts = allPosts;
     }
   },
   actions: {
@@ -103,6 +110,21 @@ export default new Vuex.Store({
           
         });
     },
+    changeProfil: ({commit}, modifiedUserInfos) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        instance.put('/users/me', modifiedUserInfos)
+        .then(function (res) {
+          commit('setStatus', 'user_modified');
+          resolve(res);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_modifying');
+          reject(error);
+        });
+      });
+    },
     createPost: ({commit}, postInfos) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
@@ -117,7 +139,19 @@ export default new Vuex.Store({
           reject(error);
         });
       });
-    }
+    },
+    getAllPosts: ({commit}) => {
+      instance.get('/posts')
+        .then(function (res) {
+          commit('allPosts', res.data);
+          
+
+        })
+        .catch(function () {
+          
+        });
+    },
+
   },
   modules: {
   }

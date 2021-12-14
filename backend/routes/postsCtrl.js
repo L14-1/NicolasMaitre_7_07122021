@@ -27,7 +27,7 @@ module.exports = {
         asyncLib.waterfall([
             function (done) {
                 models.User.findOne({
-                    were: { id: userId }
+                    where: { id: userId }
                 })
                     .then(function (userFound) {
                         done(null, userFound);
@@ -42,11 +42,11 @@ module.exports = {
                         content: content,
                         likes: 0,
                         dislikes: 0,
-                        UserId: userFound.id
+                        UserId: userFound.id,
                     })
-                        .then(function (newPost) {
-                            done(newPost);
-                        })
+                    .then(function (newPost) {
+                        done(newPost);
+                    });
 
                 } else {
                     res.status(404).json({ 'error': 'user not found' });
@@ -58,7 +58,7 @@ module.exports = {
             } else {
                 return res.status(500).json({ 'error': 'cannot post this post' });
             }
-        })
+        });
 
     },
     listPosts: function (req, res) {

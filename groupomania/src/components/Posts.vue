@@ -154,7 +154,7 @@
       }
       input {
         width: 80%;
-        border: 1px #9e9a9a solid;
+        border: none;
       }
     }
   }

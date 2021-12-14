@@ -29,7 +29,7 @@
   padding: 0;
   box-sizing: border-box;
   list-style: none;
-  font-family: "Readex Pro", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 body {
