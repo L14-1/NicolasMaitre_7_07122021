@@ -1,100 +1,140 @@
 <template>
-  <div class="profile">
-    <font-awesome-icon v-if="mode == 'account'" class="modify-icon" :icon="['fas', 'pencil-alt']" @click="modifyProfil()" />
-    <font-awesome-icon v-if="mode == 'modifyProfil'" class="modify-icon" :icon="['fas', 'times']" @click="backToAccount()" />
-    <div class="profile__picture">
-      <img alt="photo de profil" src="../assets/default-profile-pic.jpg" />
-      <button v-if="mode == 'modifyProfil'" >
-        <font-awesome-icon :icon="['fas', 'pencil-alt']"  />
+  <div>
+    <navBar />
+    <div class="profile">
+      <font-awesome-icon
+        v-if="mode == 'account'"
+        class="modify-icon"
+        :icon="['fas', 'pencil-alt']"
+        @click="modifyProfil()"
+      />
+      <font-awesome-icon
+        v-if="mode == 'modifyProfil'"
+        class="modify-icon"
+        :icon="['fas', 'times']"
+        @click="backToAccount()"
+      />
+      <div class="profile__picture">
+        <img alt="photo de profil" src="../assets/default-profile-pic.jpg" />
+        <button v-if="mode == 'modifyProfil'">
+          <font-awesome-icon :icon="['fas', 'pencil-alt']" />
+        </button>
+      </div>
+
+      <form class="profile--form">
+        <div class="profile--form__title">
+          <p v-if="mode == 'account'">{{ user.name }}</p>
+          <p v-if="mode == 'account'">{{ user.lastname }}</p>
+          <input
+            v-model="name"
+            id="name"
+            :placeholder="[[user.name]]"
+            v-if="mode == 'modifyProfil'"
+          />
+          <input
+            v-model="lastname"
+            id="lastname"
+            :placeholder="[[user.lastname]]"
+            v-if="mode == 'modifyProfil'"
+          />
+        </div>
+        <div
+          class="profile--form__description"
+          v-if="user.bio != null || mode == 'modifyProfil'"
+        >
+          <p v-if="mode == 'account'">" {{ user.bio }} "</p>
+          <textarea
+            v-model="bio"
+            v-if="mode == 'modifyProfil'"
+            type="text"
+            :placeholder="[[user.bio]]"
+            rows="3"
+            required
+          />
+        </div>
+        <button
+          v-if="mode == 'modifyProfil'"
+          @click.prevent="changeProfil()"
+          class="button--disconnect"
+        >
+          MODIFIER
+        </button>
+      </form>
+
+      <button
+        v-if="mode == 'account'"
+        @click="logout()"
+        class="button--disconnect"
+      >
+        DECONNEXION
       </button>
     </div>
-
-    <form class="profile--form">
-      <div class="profile--form__title">
-        <p v-if="mode == 'account'">{{ user.name }}</p>
-        <p v-if="mode == 'account'">{{ user.lastname }}</p>
-        <input v-model="name" id="name" :placeholder="[[ user.name ]]" v-if="mode == 'modifyProfil'" />
-        <input v-model="lastname" id="lastname" :placeholder="[[ user.lastname ]]" v-if="mode == 'modifyProfil'" />
-      </div>
-      <div class="profile--form__description" v-if="user.bio != null || mode == 'modifyProfil'" >
-        <p v-if="mode == 'account'" >" {{ user.bio }} "</p>
-        <textarea v-model="bio" v-if="mode == 'modifyProfil'" type="text" :placeholder="[[ user.bio ]]" rows="3" required />
-      </div>
-      <button v-if="mode == 'modifyProfil'" @click.prevent="changeProfil()" class="button--disconnect">
-      MODIFIER
-      </button>
-    </form>
-
-    <p v-if="mode == 'account'" class="myLastPost">Mes derniers posts :</p>
-    <Posts v-if="mode == 'account'" />
-    <button v-if="mode == 'account'" @click="logout()" class="button--disconnect">
-      DECONNEXION
-    </button>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-
 // +-----------------------------------------------------------------------+
 // |  TODO possibilité de modifier le profil (bio / image / nom / prénom)  |
 // +-----------------------------------------------------------------------+
 
-
-import { mapState } from 'vuex'
-import Posts from '@/components/Posts.vue'
+import { mapState } from "vuex";
+import navBar from "@/components/navBar.vue";
 
 export default {
-  name: 'Account',
+  name: "Account",
   mounted: function () {
     if (this.$store.state.user.userId == -1) {
-      this.$router.push('/');
+      this.$router.push("/");
       return;
     }
-    this.$store.dispatch('getUserInfos');
+    this.$store.dispatch("getUserInfos");
   },
   components: {
-    Posts
+    navBar,
   },
   data: function () {
     return {
-      mode: 'account',
-      name: '',
-      lastname: '',
-      bio: ''
-    }
+      mode: "account",
+      name: "",
+      lastname: "",
+      bio: "",
+    };
   },
   computed: {
     ...mapState({
-      user: 'userInfos',
-    })
+      user: "userInfos",
+    }),
   },
   methods: {
-    logout: function() {
-      this.$store.commit('logout');
-      this.$router.push('/');
+    logout: function () {
+      this.$store.commit("logout");
+      this.$router.push("/");
     },
-    modifyProfil: function() {
-      this.mode = 'modifyProfil'
+    modifyProfil: function () {
+      this.mode = "modifyProfil";
     },
-    backToAccount: function() {
-      this.mode = 'account'
+    backToAccount: function () {
+      this.mode = "account";
     },
     changeProfil: function () {
       const self = this;
-      this.$store.dispatch('changeProfil', {
-        bio: this.bio,
-      }).then(function () {
-        self.mode = 'account';
-        self.$router.go();
-      }, function (error) {
-        console.log(error);
-      })
-    }
-  }
-}
+      this.$store
+        .dispatch("changeProfil", {
+          bio: this.bio,
+        })
+        .then(
+          function () {
+            self.mode = "account";
+            self.$router.go();
+          },
+          function (error) {
+            console.log(error);
+          }
+        );
+    },
+  },
+};
 </script>
-
 
 <style lang="scss">
 .profile {
@@ -105,16 +145,16 @@ export default {
   align-items: center;
   .modify-icon {
     position: absolute;
-    top : 5rem;
-    right : 2rem;
+    top: 5rem;
+    right: 2rem;
     &:hover {
       cursor: pointer;
-      color : red;
+      color: red;
     }
   }
   &__picture {
-    position : absolute;
-    top : 7rem;
+    position: absolute;
+    top: 7rem;
     border: 4px white solid;
     width: 10rem;
     height: 10rem;
@@ -124,13 +164,13 @@ export default {
       width: 10rem;
     }
     button {
-      position : relative;
-      bottom : 2.5rem;
-      width : 8rem;
-      height : 2rem;
+      position: relative;
+      bottom: 2.5rem;
+      width: 8rem;
+      height: 2rem;
       background-color: #555658;
-      border : none;
-      color : #acb8c8;
+      border: none;
+      color: #acb8c8;
       cursor: pointer;
       &:hover {
         background-color: grey;
@@ -138,17 +178,18 @@ export default {
     }
   }
   &--form {
-    margin-top : 10rem;
+    margin-top: 10rem;
     &__title {
       display: flex;
       flex-direction: row;
       justify-content: center;
-      p, input {
+      p,
+      input {
         margin: 2rem 1rem;
       }
       input {
-        width : 5rem;
-        padding : 0.25rem;
+        width: 5rem;
+        padding: 0.25rem;
       }
     }
     &__description {
@@ -156,9 +197,9 @@ export default {
         padding: 0.25rem;
         background-color: #555658;
         width: 15rem;
-        border-radius : 0.5rem;
+        border-radius: 0.5rem;
         border: none;
-        resize : none;
+        resize: none;
       }
     }
   }
@@ -166,25 +207,22 @@ export default {
     background-color: grey;
     border-radius: 0.5rem;
     background-color: #555658;
-    color : #acb8c8;
-    border : none;
-  }
-  .myLastPost {
-    margin-top : 5rem;
-    transform: translateX(-10rem);
-    // text-decoration: underline;
+    color: #acb8c8;
+    border: none;
   }
   .button--disconnect {
-    margin-top : 3rem;
-    padding : 0 1rem;
+    margin-top: 3rem;
+    padding: 0 1rem;
     height: 2rem;
-    border: none;
+    border: 1px red solid;
     border-radius: 0.5rem;
-    background-color: red;
+    color: #acb8c8;
+    background-color: transparent;
     transition: all 0.5s ease-out;
     &:hover {
-      cursor : pointer;
-      background-color: rgb(255, 66, 66);
+      border: none;
+      cursor: pointer;
+      background-color: red;
       transition: all 0.5s ease-out;
     }
   }

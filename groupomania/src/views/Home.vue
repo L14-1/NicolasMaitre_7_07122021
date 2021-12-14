@@ -1,166 +1,200 @@
 <template>
-  <div class="home">
-    <p class="welcome-message" >Bonjour {{ user.name }} {{ user.lastname }}, <br> que souhaitez-vous partager aujourd'hui ?</p>
-    <div class="write-a-post" :class="{'visualize-mode' : opened}" @click="writeAPostSwitch()">
-      <font-awesome-icon v-if="mode == 'visualize'" :icon="['fas', 'pencil-alt']" />
-      <textarea v-model="content" v-if="mode == 'writeAPost'" type="text" placeholder="Ecrivez votre post ici..." rows="7" required />
-      <div class="write-a-post__btns">
-        <button v-if="mode == 'writeAPost'">Ajouter une image</button>
-        <button v-if="mode == 'writeAPost'" @click.prevent="createPost()">Publier</button>
+  <div>
+    <navBar />
+    <div class="home">
+      <p class="welcome-message">
+        Bonjour {{ user.name }} {{ user.lastname }}, <br />
+        que souhaitez-vous partager aujourd'hui ?
+      </p>
+      <div
+        class="write-a-post"
+        :class="{ 'visualize-mode': opened }"
+        @click="writeAPostSwitch()"
+      >
+        <font-awesome-icon
+          v-if="mode == 'visualize'"
+          :icon="['fas', 'pencil-alt']"
+        />
+        <textarea
+          v-model="content"
+          v-if="mode == 'writeAPost'"
+          type="text"
+          placeholder="Ecrivez votre post ici..."
+          rows="7"
+          required
+        />
+        <div class="write-a-post__btns">
+          <button v-if="mode == 'writeAPost'">
+            <font-awesome-icon :icon="['fas', 'image']" />
+          </button>
+          <button v-if="mode == 'writeAPost'" @click.prevent="createPost()">
+            <font-awesome-icon :icon="['fas', 'paper-plane']" />
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- <Posts v-for="posts in Allposts" /> -->
-  <div class="recentPost" v-for="allPosts in allPosts.slice().reverse()" v-bind:key="allPosts" >
-    <div class="recentPost__onePost">
-      <div class="recentPost__onePost--user">
-        <div class="recentPost__onePost--user__pic">
-          <img alt="pdp" src="../assets/default-profile-pic.jpg" />
-        </div>
-        <p>{{allPosts.User.name}} {{allPosts.User.lastname}}</p>
-      </div>
-      <div class="recentPost__onePost--message">
-        <p>{{allPosts.content}}</p>
-      </div>
-      <div class="recentPost__onePost--btns">
-        <div class="recentPost__onePost--btns__like">
-          <font-awesome-icon :icon="['fas', 'thumbs-up']" />
-        </div>
-        <div class="recentPost__onePost--btns__dislike">
-          <font-awesome-icon :icon="['fas', 'thumbs-down']" />
-        </div>
-      </div>
-      <div class="recentPost__onePost--comments">
-        <div class="recentPost__onePost--comments--user">
-          <div class="recentPost__onePost--comments--user__pic">
-            <img alt="pdp" src="../assets/default-profile-pic.jpg" />
+      <div
+        class="recentPost"
+        v-for="allPosts in allPosts.slice().reverse()"
+        v-bind:key="allPosts"
+      >
+        <div class="recentPost__onePost">
+          <div class="recentPost__onePost--user">
+            <div class="recentPost__onePost--user__pic">
+              <img alt="pdp" src="../assets/default-profile-pic.jpg" />
+            </div>
+            <p>{{ allPosts.User.name }} {{ allPosts.User.lastname }}</p>
           </div>
-          <p>Name Lastname</p>
+          <div class="recentPost__onePost--message">
+            <p>{{ allPosts.content }}</p>
+          </div>
+          <div class="recentPost__onePost--btns">
+            <div class="recentPost__onePost--btns__like">
+              <font-awesome-icon :icon="['fas', 'thumbs-up']" />
+            </div>
+            <div class="recentPost__onePost--btns__dislike">
+              <font-awesome-icon :icon="['fas', 'thumbs-down']" />
+            </div>
+          </div>
+          <div class="recentPost__onePost--comments">
+            <div class="recentPost__onePost--comments--user">
+              <div class="recentPost__onePost--comments--user__pic">
+                <img alt="pdp" src="../assets/default-profile-pic.jpg" />
+              </div>
+              <p>Name Lastname</p>
+            </div>
+            <div class="recentPost__onePost--comments--message">
+              <p>Great post !</p>
+            </div>
+          </div>
+          <div class="recentPost__onePost--enterYourComment">
+            <input placeholder="  comment" required />
+            <button>
+              <font-awesome-icon :icon="['fas', 'paper-plane']" />
+            </button>
+          </div>
         </div>
-        <div class="recentPost__onePost--comments--message">
-          <p>Great post !</p>
-        </div>
-      </div>
-      <div class="recentPost__onePost--enterYourComment">
-        <input placeholder="  comment" required />
-        <button>send</button>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-// import Posts from '@/components/Posts.vue'
+import { mapState } from "vuex";
+import navBar from "@/components/navBar.vue";
 
 export default {
-  name: 'Home',
+  name: "Home",
   mounted: function () {
     if (this.$store.state.user.userId == -1) {
-      this.$router.push('/');
+      this.$router.push("/");
       return;
     }
-    this.$store.dispatch('getUserInfos');
-    this.$store.dispatch('getAllPosts');
+    this.$store.dispatch("getUserInfos");
+    this.$store.dispatch("getAllPosts");
   },
-  // components: {
-  //   Posts
-  // },
+  components: {
+    navBar,
+  },
   data: function () {
     return {
-      mode: 'visualize',
-      content: '',
-    }
+      mode: "visualize",
+      content: "",
+    };
   },
   computed: {
     ...mapState({
-      status: 'status',
-      user: 'userInfos',
-      allPosts: 'allPosts',
+      status: "status",
+      user: "userInfos",
+      allPosts: "allPosts",
     }),
     opened: function () {
-      if (this.mode == 'visualize') {
-        return true
+      if (this.mode == "visualize") {
+        return true;
       } else {
-        return false
+        return false;
       }
-    }
+    },
   },
   methods: {
     writeAPostSwitch: function () {
-      if (this.mode == 'visualize') {
-        this.mode = 'writeAPost';
+      if (this.mode == "visualize") {
+        this.mode = "writeAPost";
       }
     },
     createPost: function () {
       const self = this;
-      this.$store.dispatch('createPost', {
-        
-        content: this.content,
-      }).then(function () {
-        self.mode = 'visualize';
-        self.$router.go();
-      }, function (error) {
-        console.log(error);
-      })
-     }
-  }
-}
+      this.$store
+        .dispatch("createPost", {
+          content: this.content,
+        })
+        .then(
+          function () {
+            self.mode = "visualize";
+            self.$router.go();
+          },
+          function (error) {
+            console.log(error);
+          }
+        );
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
-  .home {
-    margin-top : 8rem;
-    display : flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    .welcome-message {
-      margin-bottom : 1rem;
+.home {
+  margin-top: 8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .welcome-message {
+    margin-bottom: 1rem;
+  }
+  .visualize-mode {
+    &:hover {
+      color: greenyellow;
+      cursor: pointer;
     }
-    .visualize-mode {
-      &:hover {
-        color : greenyellow;
-        cursor: pointer;
-      }
+  }
+  .write-a-post {
+    padding: 1rem 0;
+    border-radius: 1rem;
+    background-color: #161b22;
+    width: 90vw;
+    max-width: 50rem;
+    textarea {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.5rem;
+      background-color: #555658;
+      width: 80%;
+      border: none;
+      resize: none;
     }
-    .write-a-post {
-      padding: 1rem 0;
-      border-radius: 1rem;
-      background-color: #161b22;
-      width: 90vw;
-      max-width: 50rem;
-      textarea {
-        padding: 0.5rem;
-        margin-bottom: 0.5rem;
+    &__btns {
+      display: flex;
+      justify-content: space-around;
+      button {
+        padding: 0 2rem;
+        height: 2rem;
         border-radius: 0.5rem;
         background-color: #555658;
-        width: 80%;
         border: none;
-        resize : none;
-      }
-      &__btns {
-        display : flex;
-        justify-content : space-around;
-        button {
-          padding : 0 0.5rem;
-          height: 2rem;
-          border-radius: 0.5rem;
-          background-color: #555658;
-          border: none;
-          cursor:pointer;
-          &:hover {
-            border : 1px #9e9a9a solid;
-          }
-          &:last-child:hover {
-            border: 1px #00b300 solid;
-          }
+        color: #acb8c8;
+        cursor: pointer;
+        &:hover {
+          border: 1px #9e9a9a solid;
+        }
+        &:last-child:hover {
+          border: 1px #00b300 solid;
         }
       }
     }
   }
-  .recentPost {
+}
+.recentPost {
   margin-top: 1rem;
   &__onePost {
     margin-top: 2rem;
@@ -206,11 +240,12 @@ export default {
           color: red;
         }
       }
-      &::before, &::after {
-        content: '';
+      &::before,
+      &::after {
+        content: "";
         position: relative;
         top: 0.5rem;
-        width : 70vw;
+        width: 70vw;
         height: 1px;
         background-color: #9e9a9a;
       }
@@ -253,10 +288,11 @@ export default {
       }
       button {
         width: 15%;
-        border: 1px #00b300 solid;
+        border: none;
+        color: #acb8c8;
         transition: all 0.5s ease-out;
         &:hover {
-          cursor : pointer;
+          cursor: pointer;
           background-color: #00b300;
           border: 1px #9e9a9a solid;
           transition: all 0.5s ease-out;
