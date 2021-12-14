@@ -12,7 +12,7 @@
       <div class="links">
         <ul>
           <li>
-            <router-link to="/account">Profil</router-link>
+            <router-link to="/account"><font-awesome-icon :icon="['fas', 'user']" /></router-link>
           </li>
         </ul>
       </div>
@@ -48,7 +48,7 @@ body {
   overflow: hidden;
   font-size: 1rem;
   position: absolute;
-  box-shadow: 0 3px 10px red;
+  border-bottom: 1px grey solid;
   background-color: #30363d;
   top: 0;
   width: 100vw;
@@ -57,9 +57,11 @@ body {
   justify-content: space-between;
   align-items: center;
   a {
-    color: #161b22;
+    color: #acb8c8;
     text-decoration: none;
-
+    &:hover {
+        color: grey;
+      }
     &.router-link-exact-active {
       color: #42b983;
     }
@@ -76,8 +78,9 @@ body {
   .links ul {
     display: flex;
     li {
-      margin-right: 1rem;
+      margin-right: 3rem;
       padding: 0.2rem;
+      
     }
   }
 }

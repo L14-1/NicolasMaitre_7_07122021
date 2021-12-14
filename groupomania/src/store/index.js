@@ -37,6 +37,9 @@ export default new Vuex.Store({
       name: '',
       lastname: '',
       bio: '',
+    },
+    postInfos: {
+      content: '',
     }
   },
   mutations: {
@@ -99,6 +102,21 @@ export default new Vuex.Store({
         .catch(function () {
           
         });
+    },
+    createPost: ({commit}, postInfos) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        instance.post('/posts/new', postInfos)
+        .then(function (res) {
+          commit('setStatus', 'posted');
+          resolve(res);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_create_post');
+          reject(error);
+        });
+      });
     }
   },
   modules: {

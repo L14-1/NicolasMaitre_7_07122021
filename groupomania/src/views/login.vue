@@ -56,28 +56,28 @@ export default {
         }
     },
     mounted: function () {
-    if (this.$store.state.user.userId != -1) {
-      this.$router.push('/account');
-      return;
-    }
-  },
+      if (this.$store.state.user.userId != -1) {
+        this.$router.push('/account');
+        return;
+      }
+    },
     computed: {
-        validated: function () {
-            if (this.mode == 'create') {
-                if (this.email != "" && this.name != "" && this.lastname != "" && this.password != "") {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                if (this.email != "" && this.password != "") {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        },
-        ...mapState(['status'])
+      validated: function () {
+        if (this.mode == 'create') {
+          if (this.email != "" && this.name != "" && this.lastname != "" && this.password != "") {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          if (this.email != "" && this.password != "") {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      },
+      ...mapState(['status'])
     },
     methods: {
         createAccountSwitch: function () {
