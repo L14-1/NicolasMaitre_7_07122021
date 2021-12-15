@@ -43,6 +43,8 @@ export default new Vuex.Store({
     },
     modifiedUserInfos: {
       bio: '',
+      name: '',
+      lastname: ''
     },
     allPosts: [],
   },

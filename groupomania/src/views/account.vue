@@ -15,7 +15,8 @@
         @click="backToAccount()"
       />
       <div class="profile__picture">
-        <img alt="photo de profil" src="../assets/default-profile-pic.jpg" />
+        <img v-if="user.imageUrl == null" alt="photo de profil" src="../assets/default-profile-pic.jpg" />
+        <img v-if="user.imageUrl != null" alt="photo de profil" :src="user.imageUrl" />
         <button v-if="mode == 'modifyProfil'">
           <font-awesome-icon :icon="['fas', 'pencil-alt']" />
         </button>
@@ -121,6 +122,8 @@ export default {
       this.$store
         .dispatch("changeProfil", {
           bio: this.bio,
+          name: this.name,
+          lastname: this.lastname,
         })
         .then(
           function () {

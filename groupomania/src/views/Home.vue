@@ -41,7 +41,8 @@
         <div class="recentPost__onePost">
           <div class="recentPost__onePost--user">
             <div class="recentPost__onePost--user__pic">
-              <img alt="pdp" src="../assets/default-profile-pic.jpg" />
+              <img v-if="allPosts.User.imageUrl == null" alt="photo de profil" src="../assets/default-profile-pic.jpg" />
+              <img v-if="allPosts.User.imageUrl != null" alt="photo de profil" :src="allPosts.User.imageUrl" />
             </div>
             <p>{{ allPosts.User.name }} {{ allPosts.User.lastname }}</p>
           </div>

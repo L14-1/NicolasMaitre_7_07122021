@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwtUtils = require('../utils/jwt.utils');
 const models = require('../models');
 const asyncLib = require('async');
+const fs = require('fs');
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
@@ -143,7 +144,7 @@ module.exports = {
             return res.status(400).json({ 'error': 'wrong token' });
 
         models.User.findOne({
-            attributes: ['id', 'email', 'name', 'lastname', 'bio'],
+            attributes: ['id', 'email', 'name', 'lastname', 'bio', 'imageUrl'],
             where: { id: userId }
         }).then(function (user) {
             if (user) {
@@ -162,11 +163,14 @@ module.exports = {
 
         // Params
         var bio = req.body.bio;
+        var name = req.body.name;
+        var lastname = req.body.lastname;
+        var imageUrl = req.file.filename;
 
         asyncLib.waterfall([
             function (done) {
                 models.User.findOne({
-                    attributes: ['id', 'bio'],
+                    attributes: ['id', 'bio', 'name', 'lastname', 'imageUrl'],
                     where: { id: userId }
                 }).then(function (userFound) {
                     done(null, userFound);
@@ -177,8 +181,12 @@ module.exports = {
             },
             function (userFound, done) {
                 if (userFound) {
+                    const filename = userFound.imageUrl.split('/images/')[1];
                     userFound.update({
-                        bio: (bio ? bio : userFound.bio)
+                        bio: (bio ? bio : userFound.bio),
+                        name: (name ? name : userFound.name),
+                        lastname: (lastname ? lastname : userFound.lastname),
+                        imageUrl: (imageUrl ? ( fs.unlink(`images/${filename}`, () => { }), `${req.protocol}://${req.get('host')}/images/${imageUrl}` ) : userFound.imageUrl ),
                     }).then(function () {
                         done(userFound);
                     }).catch(function (err) {
