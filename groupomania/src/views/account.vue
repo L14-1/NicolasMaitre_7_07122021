@@ -14,15 +14,28 @@
         :icon="['fas', 'times']"
         @click="backToAccount()"
       />
-      <div class="profile__picture">
-        <img v-if="user.imageUrl == null" alt="photo de profil" src="../assets/default-profile-pic.jpg" />
-        <img v-if="user.imageUrl != null" alt="photo de profil" :src="user.imageUrl" />
-        <button v-if="mode == 'modifyProfil'">
-          <font-awesome-icon :icon="['fas', 'pencil-alt']" />
-        </button>
-      </div>
+      <form class="profile--form" enctype="multipart/form-data" >
+        <div class="profile--form__picture">
+          <img
+            v-if="user.imageUrl == null"
+            alt="photo de profil"
+            src="../assets/default-profile-pic.jpg"
+          />
+          <img
+            v-if="user.imageUrl != null"
+            alt="photo de profil"
+            :src="user.imageUrl"
+          />
+        </div>
 
-      <form class="profile--form">
+        <input
+          type="file"
+          id="imageUrl"
+          accept=".jpeg, .png, .jpg"
+          @change="loadPicture"
+          v-if="mode == 'modifyProfil'"
+        />
+
         <div class="profile--form__title">
           <p v-if="mode == 'account'">{{ user.name }}</p>
           <p v-if="mode == 'account'">{{ user.lastname }}</p>
@@ -50,7 +63,6 @@
             type="text"
             :placeholder="[[user.bio]]"
             rows="3"
-            required
           />
         </div>
         <button
@@ -80,6 +92,7 @@
 
 import { mapState } from "vuex";
 import navBar from "@/components/navBar.vue";
+// import axios from 'axios';
 
 export default {
   name: "Account",
@@ -99,6 +112,7 @@ export default {
       name: "",
       lastname: "",
       bio: "",
+      imageUrl: null,
     };
   },
   computed: {
@@ -117,14 +131,21 @@ export default {
     backToAccount: function () {
       this.mode = "account";
     },
+    loadPicture(event) {
+      this.imageUrl = event.target.files[0];
+    },
     changeProfil: function () {
       const self = this;
+      const formData = new FormData();
+      formData.append('imageUrl', this.imageUrl);
+      formData.append('bio', this.bio);
+      formData.append('name', this.name);
+      formData.append('lastname', this.lastname);
+
+
+      console.log(formData);
       this.$store
-        .dispatch("changeProfil", {
-          bio: this.bio,
-          name: this.name,
-          lastname: this.lastname,
-        })
+        .dispatch("changeProfil", formData)
         .then(
           function () {
             self.mode = "account";
@@ -155,33 +176,43 @@ export default {
       color: red;
     }
   }
-  &__picture {
-    position: absolute;
-    top: 7rem;
-    border: 4px white solid;
-    width: 10rem;
-    height: 10rem;
-    border-radius: 50%;
-    overflow: hidden;
-    img {
-      width: 10rem;
-    }
-    button {
-      position: relative;
-      bottom: 2.5rem;
-      width: 8rem;
-      height: 2rem;
-      background-color: #555658;
-      border: none;
-      color: #acb8c8;
-      cursor: pointer;
-      &:hover {
-        background-color: grey;
-      }
-    }
-  }
+
   &--form {
     margin-top: 10rem;
+    &__picture {
+      position: absolute;
+      transform-origin: center;
+      top: 7rem;
+      transform: translateX(5%);
+      border: 4px white solid;
+      width: 10rem;
+      height: 10rem;
+      border-radius: 50%;
+      overflow: hidden;
+      img {
+        width: 10rem;
+      }
+      &--btn {
+        bottom: -0.6rem;
+        // width: 8rem;
+        // height: 2rem;
+        // background-color: #555658;
+        border: none;
+        color: #acb8c8;
+        cursor: pointer;
+        &:hover {
+          color: red;
+        }
+        // input[type="file"] {
+        // display: none;
+        // }
+        .pencilPicture {
+          position: relative;
+          top: -9rem;
+          font-size: 6rem;
+        }
+      }
+    }
     &__title {
       display: flex;
       flex-direction: row;

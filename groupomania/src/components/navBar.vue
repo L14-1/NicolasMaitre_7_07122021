@@ -1,5 +1,5 @@
 <template>
-  <div id="nav" v-if="name != 'login'">
+  <div id="nav" >
     <div class="logo">
       <router-link to="/feed">
         <img alt="Groupomania logo" src="../assets/icon-left-font.png" />

@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 
 const axios = require('axios');
 
+
 const instance = axios.create({
   baseURL: 'http://localhost:3000/api/'
 });
@@ -44,7 +45,8 @@ export default new Vuex.Store({
     modifiedUserInfos: {
       bio: '',
       name: '',
-      lastname: ''
+      lastname: '',
+      imageUrl: '',
     },
     allPosts: [],
   },
@@ -116,7 +118,9 @@ export default new Vuex.Store({
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
         commit;
-        instance.put('/users/me', modifiedUserInfos)
+        instance.put('/users/me', modifiedUserInfos, {headers: {
+          'Content-Type' : 'multipart/form-data; boundary="----arbitrary boundary"  '
+        }})
         .then(function (res) {
           commit('setStatus', 'user_modified');
           resolve(res);

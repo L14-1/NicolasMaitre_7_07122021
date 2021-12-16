@@ -15,6 +15,7 @@ exports.router = (function() {
     // apiRouter.route("/users/login/").post(usersCtrl.login);
     apiRouter.post('/users/login/', usersCtrl.login);
     apiRouter.route("/users/me/").get(usersCtrl.getUserProfile);
+    
     // apiRouter.route("/users/me/").put(usersCtrl.updateUserProfile);
     apiRouter.put('/users/me/', multer, usersCtrl.updateUserProfile);
 

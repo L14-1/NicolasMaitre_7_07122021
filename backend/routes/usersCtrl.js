@@ -158,6 +158,7 @@ module.exports = {
     },
     updateUserProfile: function (req, res) {
         // Getting auth header
+        // console.log('mon fichier', req.file, "body", req.body);
         var headerAuth = req.headers['authorization'];
         var userId = jwtUtils.getUserId(headerAuth);
 
@@ -165,7 +166,6 @@ module.exports = {
         var bio = req.body.bio;
         var name = req.body.name;
         var lastname = req.body.lastname;
-        var imageUrl = req.file.filename;
 
         asyncLib.waterfall([
             function (done) {
@@ -174,19 +174,21 @@ module.exports = {
                     where: { id: userId }
                 }).then(function (userFound) {
                     done(null, userFound);
-                })
-                    .catch(function (err) {
-                        return res.status(500).json({ 'error': 'unable to verify user' });
-                    });
+                }).catch(function (err) {
+                    return res.status(500).json({ 'error': 'unable to verify user' });
+                });
             },
             function (userFound, done) {
                 if (userFound) {
-                    const filename = userFound.imageUrl.split('/images/')[1];
+                    if (!!(userFound.imageUrl)) {
+                        var filename = userFound.imageUrl.split('/images/')[1];
+                    }
+
                     userFound.update({
                         bio: (bio ? bio : userFound.bio),
                         name: (name ? name : userFound.name),
                         lastname: (lastname ? lastname : userFound.lastname),
-                        imageUrl: (imageUrl ? ( fs.unlink(`images/${filename}`, () => { }), `${req.protocol}://${req.get('host')}/images/${imageUrl}` ) : userFound.imageUrl ),
+                        imageUrl: ( !!(req.file) ? ( fs.unlink(`images/${filename}`, () => { }), `${req.protocol}://${req.get('host')}/images/${req.file.filename}` ) : userFound.imageUrl ),
                     }).then(function () {
                         done(userFound);
                     }).catch(function (err) {
