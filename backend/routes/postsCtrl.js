@@ -15,6 +15,7 @@ module.exports = {
 
         // Params
         var content = req.body.content;
+        var attachment = (!!(req.file) ? req.file.filename : null)
 
         if (content == null) {
             return res.status(400).json({ 'error': 'missing parameters' });
@@ -40,6 +41,7 @@ module.exports = {
                 if (userFound) {
                     models.Posts.create({
                         content: content,
+                        attachment: `${req.protocol}://${req.get('host')}/images/${attachment}`,
                         likes: 0,
                         dislikes: 0,
                         UserId: userFound.id,

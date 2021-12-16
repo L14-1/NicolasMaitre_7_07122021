@@ -135,7 +135,9 @@ export default new Vuex.Store({
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
         commit;
-        instance.post('/posts/new', postInfos)
+        instance.post('/posts/new', postInfos, {headers: {
+          'Content-Type' : 'multipart/form-data; boundary="----arbitrary boundary"  '
+        }})
         .then(function (res) {
           commit('setStatus', 'posted');
           resolve(res);

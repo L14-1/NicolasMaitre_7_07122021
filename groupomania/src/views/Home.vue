@@ -24,9 +24,13 @@
           required
         />
         <div class="write-a-post__btns">
-          <button v-if="mode == 'writeAPost'">
-            <font-awesome-icon :icon="['fas', 'image']" />
-          </button>
+          <input
+          type="file"
+          id="attachment"
+          accept=".jpeg, .png, .jpg"
+          @change="loadAttachment"
+          v-if="mode == 'writeAPost'"
+          />
           <button v-if="mode == 'writeAPost'" @click.prevent="createPost()">
             <font-awesome-icon :icon="['fas', 'paper-plane']" />
           </button>
@@ -48,6 +52,7 @@
           </div>
           <div class="recentPost__onePost--message">
             <p>{{ allPosts.content }}</p>
+            <img v-if="allPosts.attachment != null" alt="image de description du post" :src="allPosts.attachment" />
           </div>
           <div class="recentPost__onePost--btns">
             <div class="recentPost__onePost--btns__like">
@@ -101,6 +106,7 @@ export default {
     return {
       mode: "visualize",
       content: "",
+      attachment: "",
     };
   },
   computed: {
@@ -123,12 +129,16 @@ export default {
         this.mode = "writeAPost";
       }
     },
+    loadAttachment(event) {
+      this.attachment = event.target.files[0];
+    },
     createPost: function () {
       const self = this;
+      const formData = new FormData();
+      formData.append('content', this.content);
+      formData.append('attachment', this.attachment);
       this.$store
-        .dispatch("createPost", {
-          content: this.content,
-        })
+        .dispatch("createPost", formData)
         .then(
           function () {
             self.mode = "visualize";
@@ -224,7 +234,14 @@ export default {
     }
     &--message {
       display: flex;
+      flex-direction: column;
       margin: 1rem;
+      p {
+        margin-left : 5%;
+        margin-bottom : 2rem;
+        width : 90%;
+        text-align : left;
+      }
     }
     &--btns {
       display: flex;
