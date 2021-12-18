@@ -226,6 +226,8 @@ export default {
         border: 3px #ccffcc solid;
         img {
           width: 3rem;
+          height: 3rem;
+          object-fit: cover;
         }
       }
       p {
@@ -281,6 +283,8 @@ export default {
           border: 1.5px #ccffcc solid;
           img {
             width: 1.5rem;
+            height: 1.5rem;
+            object-fit: cover;
           }
         }
         p {

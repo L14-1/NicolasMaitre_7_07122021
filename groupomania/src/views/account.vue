@@ -191,6 +191,8 @@ export default {
       overflow: hidden;
       img {
         width: 10rem;
+        height: 10rem;
+        object-fit: cover;
       }
       &--btn {
         bottom: -0.6rem;

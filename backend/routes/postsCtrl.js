@@ -41,7 +41,7 @@ module.exports = {
                 if (userFound) {
                     models.Posts.create({
                         content: content,
-                        attachment: `${req.protocol}://${req.get('host')}/images/${attachment}`,
+                        attachment: ( !!(attachment) ? `${req.protocol}://${req.get('host')}/images/${attachment}` : null),
                         likes: 0,
                         dislikes: 0,
                         UserId: userFound.id,
