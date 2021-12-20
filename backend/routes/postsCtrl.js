@@ -77,7 +77,7 @@ module.exports = {
         }
 
         models.Post.findAll({
-            order: [(order != null) ? order.split(':') : ['createdAt', 'ASC']],
+            order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
             attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
             limit: (!isNaN(limit)) ? limit : null,
             offset: (!isNaN(offset)) ? offset : null,
@@ -132,20 +132,49 @@ module.exports = {
                 if (userFound) {
                     if (likeOrDislike == 1) {
                         let usersWhoLiked = [];
+                        var usersWhoDisliked = [];
+
                         let totalLikes = postFound.likes
+                        var totalDislikes = postFound.dislikes
+
                         if (postFound.userLikes == null) {
-                            usersWhoLiked.push(userFound.id);
-                            totalLikes = totalLikes + 1; 
+                            if (postFound.userDislikes == null || !(JSON.parse(postFound.userDislikes).includes(userFound.id))) {
+                                usersWhoLiked.push(userFound.id);
+                                totalLikes = totalLikes + 1; 
+                            } else {
+                                usersWhoDisliked = JSON.parse(postFound.userDislikes);
+                                let index = usersWhoDisliked.indexOf(userFound.id);
+                                usersWhoDisliked.splice(index, 1);
+                                totalDislikes = totalDislikes -1;
+
+                                usersWhoLiked.push(userFound.id);
+                                totalLikes = totalLikes + 1; 
+                            }
                         } else {
-                            usersWhoLiked = JSON.parse(postFound.userLikes)
-                            if (!usersWhoLiked.includes(userFound.id)) {
-                                usersWhoLiked.push(userFound.id)
-                                totalLikes = totalLikes + 1;
+                            if (postFound.userDislikes == null || !(JSON.parse(postFound.userDislikes).includes(userFound.id))) {
+                                usersWhoLiked = JSON.parse(postFound.userLikes)
+                                if (!usersWhoLiked.includes(userFound.id)) {
+                                    usersWhoLiked.push(userFound.id)
+                                    totalLikes = totalLikes + 1;
+                                }
+                            } else {
+                                usersWhoDisliked = JSON.parse(postFound.userDislikes);
+                                let index = usersWhoDisliked.indexOf(userFound.id);
+                                usersWhoDisliked.splice(index, 1);
+                                totalDislikes = totalDislikes -1;
+
+                                usersWhoLiked = JSON.parse(postFound.userLikes)
+                                if (!usersWhoLiked.includes(userFound.id)) {
+                                    usersWhoLiked.push(userFound.id)
+                                    totalLikes = totalLikes + 1;
+                                }
                             }
                         }
                         models.Post.update({
                             likes: totalLikes,
+                            dislikes: totalDislikes,
                             userLikes: usersWhoLiked,
+                            userDislikes: usersWhoDisliked,
                         },
                         {
                             where: { id: postId } 
@@ -156,20 +185,49 @@ module.exports = {
                             res.status(500).json({ 'error': 'cannot like post' });
                         });
                     } else if (likeOrDislike == -1) {
+                        let usersWhoLiked = [];
                         var usersWhoDisliked = [];
+
+                        let totalLikes = postFound.likes
                         var totalDislikes = postFound.dislikes
+
                         if (postFound.userDislikes == null) {
-                            usersWhoDisliked.push(userFound.id);
-                            totalDislikes = totalDislikes + 1; 
+                            if (postFound.userLikes == null || !(JSON.parse(postFound.userLikes).includes(userFound.id))) {
+                                usersWhoDisliked.push(userFound.id);
+                                totalDislikes = totalDislikes + 1; 
+                            } else {
+                                usersWhoLiked = JSON.parse(postFound.userLikes);
+                                let index = usersWhoLiked.indexOf(userFound.id);
+                                usersWhoLiked.splice(index, 1);
+                                totalLikes = totalLikes -1;
+
+                                usersWhoDisliked.push(userFound.id);
+                                totalDislikes = totalDislikes + 1; 
+                            }
                         } else {
-                            usersWhoDisliked = JSON.parse(postFound.userDislikes)
-                            if (!usersWhoDisliked.includes(userFound.id)) {
-                                usersWhoDisliked.push(userFound.id)
-                                totalDislikes = totalDislikes + 1;
+                            if (postFound.userLikes == null || !(JSON.parse(postFound.userLikes).includes(userFound.id))) {
+                                usersWhoDisliked = JSON.parse(postFound.userDislikes)
+                                if (!usersWhoDisliked.includes(userFound.id)) {
+                                    usersWhoDisliked.push(userFound.id)
+                                    totalDislikes = totalDislikes + 1;
+                                }
+                            } else {
+                                usersWhoLiked = JSON.parse(postFound.userLikes);
+                                let index = usersWhoLiked.indexOf(userFound.id);
+                                usersWhoLiked.splice(index, 1);
+                                totalLikes = totalLikes -1;
+
+                                usersWhoDisliked = JSON.parse(postFound.userDislikes)
+                                if (!usersWhoDisliked.includes(userFound.id)) {
+                                    usersWhoDisliked.push(userFound.id)
+                                    totalDislikes = totalDislikes + 1;
+                                }
                             }
                         }
                         models.Post.update({
+                            likes: totalLikes,
                             dislikes: totalDislikes,
+                            userLikes: usersWhoLiked,
                             userDislikes: usersWhoDisliked,
                         },
                         {

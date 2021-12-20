@@ -39,10 +39,10 @@
 
       <div
         class="recentPost"
-        v-for="allPosts in allPosts.slice().reverse()"
-        v-bind:key="allPosts"
+        v-for="allPosts in allPosts"
+        v-bind:key="allPosts.id"
       >
-        <div class="recentPost__onePost">
+        <div class="recentPost__onePost" :id="allPosts.id">
           <div class="recentPost__onePost--user">
             <div class="recentPost__onePost--user__pic">
               <img v-if="allPosts.User.imageUrl == null" alt="photo de profil" src="../assets/default-profile-pic.jpg" />
@@ -56,10 +56,12 @@
           </div>
           <div class="recentPost__onePost--btns">
             <div class="recentPost__onePost--btns__like">
-              <font-awesome-icon :icon="['fas', 'thumbs-up']" />
+              <font-awesome-icon :icon="['fas', 'thumbs-up']" class="pointer_icon" :class="{ likeActive: allPosts.userLikes.includes(userId) }" @click.prevent="likePost" />
+              <p>{{ allPosts.likes }}</p>
             </div>
-            <div class="recentPost__onePost--btns__dislike">
-              <font-awesome-icon :icon="['fas', 'thumbs-down']" />
+            <div class="recentPost__onePost--btns__dislike" >
+              <font-awesome-icon :icon="['fas', 'thumbs-down']" class="pointer_icon" :class="{ dislikeActive: allPosts.userDislikes.includes(userId) }" @click.prevent="dislikePost" />
+              <p>{{ allPosts.dislikes }}</p>
             </div>
           </div>
           <div class="recentPost__onePost--comments">
@@ -107,6 +109,7 @@ export default {
       mode: "visualize",
       content: "",
       attachment: "",
+      userId: JSON.parse(localStorage.getItem('user')).userId
     };
   },
   computed: {
@@ -149,6 +152,34 @@ export default {
           }
         );
     },
+    likePost(event) {
+      const self = this;
+      let postId = event.path[4].getAttribute('id');
+
+      this.$store
+        .dispatch("likePost", postId)
+        .then(
+          function () {
+            self.$router.go();
+          }
+        );
+    },
+    dislikePost(event) {
+      const self = this;
+      let postId = event.path[4].getAttribute('id');
+
+      this.$store
+        .dispatch("dislikePost", postId)
+        .then(
+          function () {
+            self.$router.go();
+          }
+        );
+    },
+    activeLike: function () {
+      console.log(this.allPosts.userLikes)
+      // this.allPosts.userLikes.includes(JSON.parse(localStorage.getItem('user'))).userId
+    }
   },
 };
 </script>
@@ -247,7 +278,18 @@ export default {
     }
     &--btns {
       display: flex;
-      cursor: pointer;
+      p {
+        font-size: 70%;
+      }
+      .pointer_icon {
+        cursor: pointer;
+      }
+      .likeActive {
+        color : rgb(61, 121, 61);
+      }
+      .dislikeActive {
+        color : rgb(255, 58, 58);
+      }
       &__like {
         width: 50%;
         &:hover {
