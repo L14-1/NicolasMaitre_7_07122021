@@ -21,5 +21,8 @@ exports.router = (function() {
     apiRouter.post('/posts/new/', multerAttachment, postsCtrl.createPost);
     apiRouter.route("/posts/").get(postsCtrl.listPosts);
 
+    // Likes routes
+    apiRouter.put('/posts/:id/like', postsCtrl.likePost);
+
     return apiRouter;
 })();

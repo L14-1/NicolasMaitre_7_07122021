@@ -1,16 +1,18 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var Posts = sequelize.define('Posts', {
+  var Post = sequelize.define('Post', {
     content: DataTypes.STRING,
     attachment: DataTypes.STRING,
     likes: DataTypes.INTEGER,
-    dislikes : DataTypes.INTEGER
+    dislikes : DataTypes.INTEGER,
+    userLikes : DataTypes.JSON,
+    userDislikes : DataTypes.JSON
   }, {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
         
-        models.Posts.belongsTo(models.User, {
+        models.Post.belongsTo(models.User, {
           foreignKey: {
             allowNull: false
           }
@@ -18,5 +20,5 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   });
-  return Posts;
+  return Post;
 };

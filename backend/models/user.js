@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       associate: function (models) {
         // assooiations can be defined here:
 
-        models.User.hasMany(models.Posts);
+        models.User.hasMany(models.Post);
       }
     }
   });

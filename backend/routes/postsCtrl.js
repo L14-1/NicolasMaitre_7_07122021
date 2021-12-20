@@ -39,11 +39,13 @@ module.exports = {
             },
             function (userFound, done) {
                 if (userFound) {
-                    models.Posts.create({
+                    models.Post.create({
                         content: content,
                         attachment: ( !!(attachment) ? `${req.protocol}://${req.get('host')}/images/${attachment}` : null),
                         likes: 0,
                         dislikes: 0,
+                        userLikes: null,
+                        userDislikes: null,
                         UserId: userFound.id,
                     })
                     .then(function (newPost) {
@@ -74,7 +76,7 @@ module.exports = {
             limit = ITEMS_LIMIT;
         }
 
-        models.Posts.findAll({
+        models.Post.findAll({
             order: [(order != null) ? order.split(':') : ['createdAt', 'ASC']],
             attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
             limit: (!isNaN(limit)) ? limit : null,
@@ -94,5 +96,101 @@ module.exports = {
             res.status(500).json({ "error": "invalid fields" });
         });
 
+    },
+    likePost: function (req, res) {
+        // Getting auth header
+        var headerAuth = req.headers['authorization'];
+        var userId = jwtUtils.getUserId(headerAuth);
+        var postId = req.params.id;
+
+        // Params
+        var likeOrDislike = req.body.likeOrDislike;
+
+        asyncLib.waterfall([
+            function (done) {
+                models.User.findOne({
+                    attributes: ['id', 'bio', 'name', 'lastname', 'imageUrl'],
+                    where: { id: userId }
+                }).then(function (userFound) {
+                    done(null, userFound);
+                }).catch(function (err) {
+                    return res.status(500).json({ 'error': 'unable to verify user' });
+                });
+            },
+            function (userFound, done) {
+                models.Post.findOne({
+                    attributes: ['id', 'likes', 'dislikes', 'userLikes', 'userDislikes'],
+                    where: { id: postId }
+                }).then(function (postFound) {
+                    done(null, postFound, userFound);
+                }).catch(function (err) {
+                    console.log(err);
+                    return res.status(500).json({ 'error': 'unable to find post' });
+                });
+            },
+            function (postFound, userFound, done) {
+                if (userFound) {
+                    if (likeOrDislike == 1) {
+                        let usersWhoLiked = [];
+                        let totalLikes = postFound.likes
+                        if (postFound.userLikes == null) {
+                            usersWhoLiked.push(userFound.id);
+                            totalLikes = totalLikes + 1; 
+                        } else {
+                            usersWhoLiked = JSON.parse(postFound.userLikes)
+                            if (!usersWhoLiked.includes(userFound.id)) {
+                                usersWhoLiked.push(userFound.id)
+                                totalLikes = totalLikes + 1;
+                            }
+                        }
+                        models.Post.update({
+                            likes: totalLikes,
+                            userLikes: usersWhoLiked,
+                        },
+                        {
+                            where: { id: postId } 
+                        })
+                        .then(function () {
+                            done(postFound);
+                        }).catch(function (err) {
+                            res.status(500).json({ 'error': 'cannot like post' });
+                        });
+                    } else if (likeOrDislike == -1) {
+                        var usersWhoDisliked = [];
+                        var totalDislikes = postFound.dislikes
+                        if (postFound.userDislikes == null) {
+                            usersWhoDisliked.push(userFound.id);
+                            totalDislikes = totalDislikes + 1; 
+                        } else {
+                            usersWhoDisliked = JSON.parse(postFound.userDislikes)
+                            if (!usersWhoDisliked.includes(userFound.id)) {
+                                usersWhoDisliked.push(userFound.id)
+                                totalDislikes = totalDislikes + 1;
+                            }
+                        }
+                        models.Post.update({
+                            dislikes: totalDislikes,
+                            userDislikes: usersWhoDisliked,
+                        },
+                        {
+                            where: { id: postId } 
+                        })
+                        .then(function () {
+                            done(postFound);
+                        }).catch(function (err) {
+                            res.status(500).json({ 'error': 'cannot dislike post' });
+                        });
+                    };
+                } else {
+                    res.status(404).json({ 'error': 'user not found' });
+                };        
+            },
+        ], function (postFound) {
+            if (postFound) {
+                return res.status(201).json(postFound);
+            } else {
+                return res.status(500).json({ 'error': 'cannot update post likes' });
+            }
+        });
     }
 }
