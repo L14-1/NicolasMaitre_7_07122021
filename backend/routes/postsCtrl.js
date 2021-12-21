@@ -156,6 +156,10 @@ module.exports = {
                                 if (!usersWhoLiked.includes(userFound.id)) {
                                     usersWhoLiked.push(userFound.id)
                                     totalLikes = totalLikes + 1;
+                                } else {
+                                    let index = usersWhoLiked.indexOf(userFound.id);
+                                    usersWhoLiked.splice(index, 1);
+                                    totalLikes = totalLikes -1;
                                 }
                             } else {
                                 usersWhoDisliked = JSON.parse(postFound.userDislikes);
@@ -167,6 +171,10 @@ module.exports = {
                                 if (!usersWhoLiked.includes(userFound.id)) {
                                     usersWhoLiked.push(userFound.id)
                                     totalLikes = totalLikes + 1;
+                                } else {
+                                    let index = usersWhoLiked.indexOf(userFound.id);
+                                    usersWhoLiked.splice(index, 1);
+                                    totalLikes = totalLikes -1;
                                 }
                             }
                         }
@@ -210,6 +218,10 @@ module.exports = {
                                 if (!usersWhoDisliked.includes(userFound.id)) {
                                     usersWhoDisliked.push(userFound.id)
                                     totalDislikes = totalDislikes + 1;
+                                } else {
+                                    let index = usersWhoDisliked.indexOf(userFound.id);
+                                    usersWhoDisliked.splice(index, 1);
+                                    totalDislikes = totalDislikes -1;
                                 }
                             } else {
                                 usersWhoLiked = JSON.parse(postFound.userLikes);
@@ -221,6 +233,10 @@ module.exports = {
                                 if (!usersWhoDisliked.includes(userFound.id)) {
                                     usersWhoDisliked.push(userFound.id)
                                     totalDislikes = totalDislikes + 1;
+                                } else {
+                                    let index = usersWhoDisliked.indexOf(userFound.id);
+                                    usersWhoDisliked.splice(index, 1);
+                                    totalDislikes = totalDislikes -1;
                                 }
                             }
                         }

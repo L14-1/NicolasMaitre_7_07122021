@@ -293,13 +293,13 @@ export default {
       &__like {
         width: 50%;
         &:hover {
-          color: green;
+          color: rgb(61, 121, 61);
         }
       }
       &__dislike {
         width: 50%;
         &:hover {
-          color: red;
+          color: rgb(255, 58, 58);
         }
       }
       &::before,
