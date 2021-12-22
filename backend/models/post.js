@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
   var Post = sequelize.define('Post', {
     content: DataTypes.STRING,
     attachment: DataTypes.STRING,
-    likes: DataTypes.INTEGER,
   }, {
     classMethods: {
       associate: function(models) {

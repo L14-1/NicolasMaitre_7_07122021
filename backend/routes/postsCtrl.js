@@ -42,7 +42,6 @@ module.exports = {
                     models.Post.create({
                         content: content,
                         attachment: ( !!(attachment) ? `${req.protocol}://${req.get('host')}/images/${attachment}` : null),
-                        likes: 0,
                         UserId: userFound.id,
                     })
                     .then(function (newPost) {
