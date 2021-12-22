@@ -56,12 +56,12 @@
           </div>
           <div class="recentPost__onePost--btns">
             <div class="recentPost__onePost--btns__like">
-              <font-awesome-icon :icon="['fas', 'thumbs-up']" class="pointer_icon" :class="{ likeActive: allPosts.userLikes.includes(userId) }" @click.prevent="likePost" />
-              <p>{{ allPosts.likes }}</p>
+              <font-awesome-icon :icon="['fas', 'thumbs-up']" class="pointer_icon" @click.prevent="likePost" />
+              <p>0</p>
             </div>
             <div class="recentPost__onePost--btns__dislike" >
-              <font-awesome-icon :icon="['fas', 'thumbs-down']" class="pointer_icon" :class="{ dislikeActive: allPosts.userDislikes.includes(userId) }" @click.prevent="dislikePost" />
-              <p>{{ allPosts.dislikes }}</p>
+              <font-awesome-icon :icon="['fas', 'thumbs-down']" class="pointer_icon" @click.prevent="dislikePost" />
+              <p>0</p>
             </div>
           </div>
           <div class="recentPost__onePost--comments">
@@ -100,6 +100,7 @@ export default {
     }
     this.$store.dispatch("getUserInfos");
     this.$store.dispatch("getAllPosts");
+    console.log(this.allPosts)
   },
   components: {
     navBar,
@@ -176,10 +177,6 @@ export default {
           }
         );
     },
-    activeLike: function () {
-      console.log(this.allPosts.userLikes)
-      // this.allPosts.userLikes.includes(JSON.parse(localStorage.getItem('user'))).userId
-    }
   },
 };
 </script>

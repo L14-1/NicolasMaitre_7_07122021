@@ -4,9 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.STRING,
     attachment: DataTypes.STRING,
     likes: DataTypes.INTEGER,
-    dislikes : DataTypes.INTEGER,
-    userLikes : DataTypes.JSON,
-    userDislikes : DataTypes.JSON
   }, {
     classMethods: {
       associate: function(models) {

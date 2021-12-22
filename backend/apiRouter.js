@@ -1,6 +1,7 @@
 const express = require("express");
 const usersCtrl = require("./routes/usersCtrl");
 const postsCtrl = require("./routes/postsCtrl");
+const likesCtrl = require('./routes/likesCtrl');
 const multer = require('./middleware/multer-config');
 const multerAttachment = require('./middleware/multer-config-attachment');
 
@@ -22,7 +23,8 @@ exports.router = (function() {
     apiRouter.route("/posts/").get(postsCtrl.listPosts);
 
     // Likes routes
-    apiRouter.put('/posts/:id/like', postsCtrl.likePost);
+    apiRouter.post('/posts/:postId/vote/like', likesCtrl.likePost);
+    apiRouter.post('/posts/:postId/vote/dislike', likesCtrl.dislikePost);
 
     return apiRouter;
 })();
