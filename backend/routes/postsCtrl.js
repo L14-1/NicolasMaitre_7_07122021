@@ -81,6 +81,10 @@ module.exports = {
             include: [{
                 model: models.User,
                 attributes: ['name', 'lastname', 'imageUrl']
+            },
+            {
+                model: models.Like,
+                attributes: ['userId']
             }]
         }).then(function (posts) {
             if (posts) {
