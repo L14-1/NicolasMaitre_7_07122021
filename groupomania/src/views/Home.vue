@@ -56,12 +56,9 @@
           </div>
           <div class="recentPost__onePost--btns">
             <div class="recentPost__onePost--btns__like">
-              <font-awesome-icon :icon="['fas', 'thumbs-up']" class="pointer_icon" @click.prevent="likePost" />
-              <p>0</p>
-            </div>
-            <div class="recentPost__onePost--btns__dislike" >
-              <font-awesome-icon :icon="['fas', 'thumbs-down']" class="pointer_icon" @click.prevent="dislikePost" />
-              <p>0</p>
+              <font-awesome-icon :icon="['fas', 'heart']" class="pointer_icon" :class="{ likeActive: allPosts.Likes.some(like => like['userId'] === userId)}" @click.prevent="likePost" />
+              <p v-if="allPosts.Likes.length == 0">Soyez le premier à aimer !</p>
+              <p v-else>{{ allPosts.Likes.length }} personnes aiment ca</p>
             </div>
           </div>
           <div class="recentPost__onePost--comments">
@@ -100,7 +97,6 @@ export default {
     }
     this.$store.dispatch("getUserInfos");
     this.$store.dispatch("getAllPosts");
-    console.log(this.allPosts)
   },
   components: {
     navBar,
@@ -159,18 +155,6 @@ export default {
 
       this.$store
         .dispatch("likePost", postId)
-        .then(
-          function () {
-            self.$router.go();
-          }
-        );
-    },
-    dislikePost(event) {
-      const self = this;
-      let postId = event.path[4].getAttribute('id');
-
-      this.$store
-        .dispatch("dislikePost", postId)
         .then(
           function () {
             self.$router.go();
@@ -275,28 +259,24 @@ export default {
     }
     &--btns {
       display: flex;
-      p {
-        font-size: 70%;
-      }
+      
       .pointer_icon {
         cursor: pointer;
       }
       .likeActive {
-        color : rgb(61, 121, 61);
-      }
-      .dislikeActive {
-        color : rgb(255, 58, 58);
+        color : rgb(255, 0, 200);
       }
       &__like {
-        width: 50%;
-        &:hover {
-          color: rgb(61, 121, 61);
-        }
+        width: 100%;
+        display : flex;
+        flex-direction: row;
+        justify-content: center;
+        p {
+        font-size: 70%;
+        margin-left : 0.5rem;
       }
-      &__dislike {
-        width: 50%;
         &:hover {
-          color: rgb(255, 58, 58);
+          color: rgb(255, 0, 200);
         }
       }
       &::before,

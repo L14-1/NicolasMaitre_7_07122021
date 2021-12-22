@@ -160,43 +160,22 @@ export default new Vuex.Store({
           
         });
     },
-    // likePost: ({commit}, postId) => {
-    //   commit('setStatus', 'loading');
-    //   return new Promise((resolve, reject) => {
-    //     commit;
-    //     let idPost = postId
-    //     instance.put(`/posts/${idPost}/like`, {
-    //       likeOrDislike : 1
-    //     })
-    //     .then(function (res) {
-    //       commit('setStatus', 'liked');
-    //       resolve(res);
-    //     })
-    //     .catch(function (error) {
-    //       commit('setStatus', 'error_like_post');
-    //       reject(error);
-    //     });
-    //   });
-    // },
-    // dislikePost: ({commit}, postId) => {
-    //   commit('setStatus', 'loading');
-    //   return new Promise((resolve, reject) => {
-    //     commit;
-    //     let idPost = postId
-    //     instance.put(`/posts/${idPost}/like`, {
-    //       likeOrDislike : -1
-    //     })
-    //     .then(function (res) {
-    //       commit('setStatus', 'disliked');
-    //       resolve(res);
-    //     })
-    //     .catch(function (error) {
-    //       commit('setStatus', 'error_dislike_post');
-    //       reject(error);
-    //     });
-    //   });
-    // }
-
+    likePost: ({commit}, postId) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        let idPost = postId
+        instance.post(`/posts/${idPost}/vote/like`)
+        .then(function (res) {
+          commit('setStatus', 'liked');
+          resolve(res);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_like_post');
+          reject(error);
+        });
+      });
+    },
   },
   modules: {
   }
