@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         // assooiations can be defined here:
 
         models.User.hasMany(models.Post);
+        models.User.hasMany(models.Like);
       }
     }
   });

@@ -251,7 +251,7 @@ export default {
         height: 3rem;
         overflow: hidden;
         border-radius: 50%;
-        border: 3px #ccffcc solid;
+        border: 3px white solid;
         img {
           width: 3rem;
           height: 3rem;
@@ -319,7 +319,7 @@ export default {
           height: 1.5rem;
           overflow: hidden;
           border-radius: 50%;
-          border: 1.5px #ccffcc solid;
+          border: 1.5px white solid;
           img {
             width: 1.5rem;
             height: 1.5rem;

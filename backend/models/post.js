@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: {
             allowNull: false
           }
-        })
+        }),
+        models.Post.hasMany(models.Like)
       }
     }
   });
