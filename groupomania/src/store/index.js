@@ -176,6 +176,25 @@ export default new Vuex.Store({
         });
       });
     },
+    commentPost: ({commit}, commentInfos) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        console.log(commentInfos, commentInfos.postId)
+        let idPost = commentInfos.postId
+        instance.post(`/posts/${idPost}/comment`, {
+          comment: commentInfos.comment
+        })
+        .then(function (res) {
+          commit('setStatus', 'commented');
+          resolve(res);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_comment_post');
+          reject(error);
+        });
+      });
+    },
   },
   modules: {
   }

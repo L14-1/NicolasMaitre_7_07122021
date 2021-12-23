@@ -66,15 +66,15 @@
               <div class="recentPost__onePost--comments--user__pic">
                 <img alt="pdp" :src="allPostsComments.imageUrl" />
               </div>
-              <p>{{ allPostsComments.name }}</p>
+              <p>{{ allPostsComments.name }} {{ allPostsComments.lastname }}</p>
             </div>
             <div class="recentPost__onePost--comments--message">
               <p>{{ allPostsComments.comment }}</p>
             </div>
           </div>
           <form class="recentPost__onePost--enterYourComment">
-            <input placeholder="  commenter" required />
-            <button>
+            <input v-model="comment" id="comment" placeholder="commenter" required />
+            <button @click.prevent="commentPost">
               <font-awesome-icon :icon="['fas', 'paper-plane']" />
             </button>
           </form>
@@ -106,7 +106,8 @@ export default {
       mode: "visualize",
       content: "",
       attachment: "",
-      userId: JSON.parse(localStorage.getItem('user')).userId
+      userId: JSON.parse(localStorage.getItem('user')).userId,
+      comment: ""
     };
   },
   computed: {
@@ -155,6 +156,21 @@ export default {
 
       this.$store
         .dispatch("likePost", postId)
+        .then(
+          function () {
+            self.$router.go();
+          }
+        );
+    },
+    commentPost(event) {
+      const self = this;
+      let postId = event.path[2].getAttribute('id');
+
+      this.$store
+        .dispatch("commentPost", {
+          postId: postId,
+          comment: this.comment
+        })
         .then(
           function () {
             self.$router.go();
@@ -320,6 +336,7 @@ export default {
     &--enterYourComment {
       display: flex;
       justify-content: space-around;
+      margin-top : 2rem;
       input,
       button {
         margin-bottom: 0.5rem;
@@ -340,6 +357,7 @@ export default {
         }
       }
       input {
+        padding: 0 0.5rem;
         width: 80%;
         border: none;
       }

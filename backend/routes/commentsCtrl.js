@@ -22,8 +22,6 @@ module.exports = {
         where: { id: userId }
     })
 
-    console.log(userInfos.name)
-
     models.Comment.create({
         postId: postId,
         userId: userId,
