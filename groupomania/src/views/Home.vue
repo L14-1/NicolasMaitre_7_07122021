@@ -48,7 +48,8 @@
               <img v-if="allPosts.User.imageUrl == null" alt="photo de profil" src="../assets/default-profile-pic.jpg" />
               <img v-if="allPosts.User.imageUrl != null" alt="photo de profil" :src="allPosts.User.imageUrl" />
             </div>
-            <a :href="'user?id=' + [[allPosts.UserId]]">{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a>
+            <a v-if="[[allPosts.UserId]] != [[user.userId]]" :href="'user?id=' + [[allPosts.UserId]]">{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a>
+            <a v-else href="account">{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a>
           </div>
           <div class="recentPost__onePost--message">
             <p>{{ allPosts.content }}</p>
@@ -143,7 +144,7 @@ export default {
         .then(
           function () {
             self.mode = "visualize";
-            self.$router.go();
+            self.$store.dispatch("getAllPosts");
           },
           function (error) {
             console.log(error);
@@ -158,7 +159,7 @@ export default {
         .dispatch("likePost", postId)
         .then(
           function () {
-            self.$router.go();
+            self.$store.dispatch("getAllPosts");
           }
         );
     },
@@ -173,7 +174,7 @@ export default {
         })
         .then(
           function () {
-            self.$router.go();
+            self.$store.dispatch("getAllPosts");
           }
         );
     },
