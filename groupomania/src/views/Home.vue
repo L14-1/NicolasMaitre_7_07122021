@@ -48,7 +48,7 @@
               <img v-if="allPosts.User.imageUrl == null" alt="photo de profil" src="../assets/default-profile-pic.jpg" />
               <img v-if="allPosts.User.imageUrl != null" alt="photo de profil" :src="allPosts.User.imageUrl" />
             </div>
-            <p>{{ allPosts.User.name }} {{ allPosts.User.lastname }}</p>
+            <a :href="'user?id=' + [[allPosts.UserId]]">{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a>
           </div>
           <div class="recentPost__onePost--message">
             <p>{{ allPosts.content }}</p>
@@ -66,7 +66,7 @@
               <div class="recentPost__onePost--comments--user__pic">
                 <img alt="pdp" :src="allPostsComments.imageUrl" />
               </div>
-              <p>{{ allPostsComments.name }} {{ allPostsComments.lastname }}</p>
+              <a :href="'user?id=' + [[allPostsComments.userId]]">{{ allPostsComments.name }} {{ allPostsComments.lastname }}</a>
             </div>
             <div class="recentPost__onePost--comments--message">
               <p>{{ allPostsComments.comment }}</p>
@@ -258,8 +258,13 @@ export default {
           object-fit: cover;
         }
       }
-      p {
+      a {
         padding: 0.75rem 1rem;
+        color : #acb8c8;
+        text-decoration: none;
+        &:hover {
+          font-weight: 700;
+        }
       }
     }
     &--message {
@@ -322,9 +327,14 @@ export default {
             object-fit: cover;
           }
         }
-        p {
-          padding: 0.4rem 1rem;
+        a {
+          padding: 0.3rem 1rem;
           font-size: 0.9rem;
+          color : #acb8c8;
+          text-decoration: none;
+          &:hover {
+          font-weight: 700;
+        }
         }
       }
       &--message {

@@ -40,6 +40,13 @@ export default new Vuex.Store({
       lastname: '',
       bio: '',
     },
+    oneUserInfos: {
+      userId: null,
+      email: '',
+      name: '',
+      lastname: '',
+      bio: '',
+    },
     postInfos: {
       content: '',
     },
@@ -62,6 +69,9 @@ export default new Vuex.Store({
     },
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
+    },
+    oneUserInfos: function (state, oneUserInfos) {
+      state.oneUserInfos = oneUserInfos;
     },
     logout: function (state) {
       state.user = {
@@ -109,10 +119,17 @@ export default new Vuex.Store({
       instance.get('/users/me')
         .then(function (res) {
           commit('userInfos', res.data);
-
         })
-        .catch(function () {
-          
+        .catch(function () {  
+        });
+    },
+    getOneUserInfos: ({commit}, pageId) => {
+      const id = pageId
+      instance.get(`/users/${id}`)
+        .then(function (res) {
+          commit('oneUserInfos', res.data);
+        })
+        .catch(function () {  
         });
     },
     changeProfil: ({commit}, modifiedUserInfos) => {
@@ -153,11 +170,8 @@ export default new Vuex.Store({
       instance.get('/posts')
         .then(function (res) {
           commit('allPosts', res.data);
-          
-
         })
-        .catch(function () {
-          
+        .catch(function () {      
         });
     },
     likePost: ({commit}, postId) => {

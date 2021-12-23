@@ -17,6 +17,7 @@ exports.router = (function() {
     apiRouter.post('/users/login/', usersCtrl.login);
     apiRouter.route("/users/me/").get(usersCtrl.getUserProfile);
     apiRouter.put('/users/me/', multer, usersCtrl.updateUserProfile);
+    apiRouter.route("/users/:userId/").get(usersCtrl.getOneUserProfile);
 
     // Posts routes
     apiRouter.post('/posts/new/', multerAttachment, postsCtrl.createPost);

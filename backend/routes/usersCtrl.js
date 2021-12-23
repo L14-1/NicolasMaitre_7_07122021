@@ -205,5 +205,34 @@ module.exports = {
                 return res.status(500).json({ 'error': 'cannot update user profile' });
             }
         });
+    },
+    getOneUserProfile : async function (req, res) {
+        // Getting auth header
+        var headerAuth = req.headers['authorization'];
+        var Id = jwtUtils.getUserId(headerAuth);
+
+        if (Id < 0)
+            return res.status(400).json({ 'error': 'wrong token' });
+        
+        
+        userId = req.params.userId
+       
+        if (userId < 0) {
+            return res.status(400).json({ 'error': 'wrong token' });
+        }
+
+        models.User.findOne({
+            attributes: ['id', 'bio', 'name', 'lastname', 'imageUrl'],
+            where: { id: userId }
+        }).then(function (user) {
+            if (user) {
+                res.status(201).json(user);
+            } else {
+                res.status(404).json({ 'error': 'user not found' });
+            }
+        }).catch(function (err) {
+            res.status(500).json({ 'error': 'cannot fetch user' });
+        });
+        
     }
 };
