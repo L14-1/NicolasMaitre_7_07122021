@@ -61,23 +61,23 @@
               <p v-else>{{ allPosts.Likes.length }} personnes aiment ca</p>
             </div>
           </div>
-          <div class="recentPost__onePost--comments">
+          <div class="recentPost__onePost--comments" v-for="allPostsComments in allPosts.Comments" v-bind:key="allPostsComments.userId">
             <div class="recentPost__onePost--comments--user">
               <div class="recentPost__onePost--comments--user__pic">
-                <img alt="pdp" src="../assets/default-profile-pic.jpg" />
+                <img alt="pdp" :src="allPostsComments.imageUrl" />
               </div>
-              <p>Name Lastname</p>
+              <p>{{ allPostsComments.name }}</p>
             </div>
             <div class="recentPost__onePost--comments--message">
-              <p>Great post !</p>
+              <p>{{ allPostsComments.comment }}</p>
             </div>
           </div>
-          <div class="recentPost__onePost--enterYourComment">
-            <input placeholder="  comment" required />
+          <form class="recentPost__onePost--enterYourComment">
+            <input placeholder="  commenter" required />
             <button>
               <font-awesome-icon :icon="['fas', 'paper-plane']" />
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>

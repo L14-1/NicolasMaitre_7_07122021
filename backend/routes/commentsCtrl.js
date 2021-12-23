@@ -5,7 +5,7 @@ var jwtUtils = require('../utils/jwt.utils');
 
 // Routes
 module.exports = {
-  likePost:  async function(req, res) {
+  commentPost:  async function(req, res) {
     // Getting auth header
     var headerAuth  = req.headers['authorization'];
     var userId      = jwtUtils.getUserId(headerAuth);
@@ -17,25 +17,23 @@ module.exports = {
       return res.status(400).json({ 'error': 'invalid parameters' });
     }
 
-    const likeFound = await models.Like.findOne({
-      where: { postId: postId, userId: userId },
-    });
+    let userInfos = await models.User.findOne({
+        attributes: ['id', 'name', 'lastname', 'imageUrl'],
+        where: { id: userId }
+    })
 
-    if (likeFound) {
-      console.log(likeFound)
-      models.Like.destroy({
-        where: { postId: postId, userId: userId}
-      });
-      res.status(200).send({ 'message': 'unliked this post'})
-    } else {
-      models.Like.create({
+    console.log(userInfos.name)
+
+    models.Comment.create({
         postId: postId,
         userId: userId,
-        isLike: 1,
-      });
-      res.status(200).send({ 'message': 'like this post'})
-    }
-    
+        name: userInfos.name,
+        lastname: userInfos.lastname,
+        imageUrl: userInfos.imageUrl,
+        comment: req.body.comment,
+    });
+
+    res.status(200).send({ 'message': 'comment posted'})
 
   }
 }

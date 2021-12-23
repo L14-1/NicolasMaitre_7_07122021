@@ -84,6 +84,10 @@ module.exports = {
             {
                 model: models.Like,
                 attributes: ['userId']
+            },
+            {
+                model: models.Comment,
+                attributes: ['userId', 'name', 'lastname', 'imageUrl', 'comment']
             }]
         }).then(function (posts) {
             if (posts) {
