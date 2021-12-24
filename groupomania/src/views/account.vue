@@ -147,7 +147,7 @@ export default {
       this.$store.dispatch("changeProfil", formData).then(
         function () {
           self.mode = "account";
-          self.$router.go();
+          self.$store.dispatch("getUserInfos");
         },
         function (error) {
           console.log(error);

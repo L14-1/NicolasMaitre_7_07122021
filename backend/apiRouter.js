@@ -22,6 +22,8 @@ exports.router = (function() {
     // Posts routes
     apiRouter.post('/posts/new/', multerAttachment, postsCtrl.createPost);
     apiRouter.route("/posts/").get(postsCtrl.listPosts);
+    apiRouter.route("/posts/:postId").delete(postsCtrl.deletePost);
+
 
     // Likes route
     apiRouter.post('/posts/:postId/vote/like', likesCtrl.likePost);

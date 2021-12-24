@@ -1,6 +1,8 @@
 const models = require('../models');
 const asyncLib = require('async');
 const jwtUtils = require('../utils/jwt.utils');
+const fs = require('fs');
+
 
 const CONTENT_LIMIT = 5;
 const ITEMS_LIMIT   = 50;
@@ -99,6 +101,53 @@ module.exports = {
             console.log(err);
             res.status(500).json({ "error": "invalid fields" });
         });
+
+    },
+    deletePost: async function (req, res) {
+        // Getting auth header
+        var headerAuth = req.headers['authorization'];
+        var userId = jwtUtils.getUserId(headerAuth);
+
+        var postId = parseInt(req.params.postId);
+
+        if (postId <= 0 || userId <= 0) {
+        return res.status(400).json({ 'error': 'invalid parameters' });
+        }
+
+        let postFound = await models.Post.findOne({
+            where: {id: postId}
+        });
+
+        if (postFound) {
+            if (postFound.attachment) {
+                var filename = postFound.attachment.split('/images/')[1];
+                console.log(filename)
+                fs.unlink(`images/${filename}`, () => {
+                    models.Comment.destroy({
+                        where: { postId: postId}
+                    });
+                    models.Like.destroy({
+                        where: { postId: postId}
+                    });
+                    models.Post.destroy({
+                        where: { id: postId}
+                    });
+                    res.status(200).send({ 'message': 'post deleted'})
+                 })
+            } else {
+                models.Comment.destroy({
+                    where: { postId: postId}
+                });
+                models.Like.destroy({
+                    where: { postId: postId}
+                });
+                models.Post.destroy({
+                    where: { id: postId}
+                });
+                res.status(200).send({ 'message': 'post deleted'})
+            }
+        }
+        
 
     },
     

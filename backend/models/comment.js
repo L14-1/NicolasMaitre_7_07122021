@@ -32,10 +32,12 @@ module.exports = (sequelize, DataTypes) => {
     models.Comment.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'user',
+      onDelete:'CASCADE',
     }),
     models.Comment.belongsTo(models.Post, {
       foreignKey: 'postId',
       as: 'post',
+      onDelete:'CASCADE',
     });
   };
   return Comment;

@@ -166,6 +166,9 @@ export default {
     commentPost(event) {
       const self = this;
       let postId = event.path[2].getAttribute('id');
+      if (postId == null) {
+        postId = event.path[4].getAttribute('id');
+      }
 
       this.$store
         .dispatch("commentPost", {

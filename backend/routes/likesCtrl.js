@@ -22,7 +22,6 @@ module.exports = {
     });
 
     if (likeFound) {
-      console.log(likeFound)
       models.Like.destroy({
         where: { postId: postId, userId: userId}
       });
