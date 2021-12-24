@@ -194,7 +194,6 @@ export default new Vuex.Store({
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
         commit;
-        console.log(commentInfos, commentInfos.postId)
         let idPost = commentInfos.postId
         instance.post(`/posts/${idPost}/comment`, {
           comment: commentInfos.comment
@@ -205,6 +204,22 @@ export default new Vuex.Store({
         })
         .catch(function (error) {
           commit('setStatus', 'error_comment_post');
+          reject(error);
+        });
+      });
+    },
+    deletePost: ({commit}, postInfos) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        let idPost = postInfos
+        instance.delete(`/posts/${idPost}`)
+        .then(function (res) {
+          commit('setStatus', 'deleted');
+          resolve(res);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_deleting_post');
           reject(error);
         });
       });

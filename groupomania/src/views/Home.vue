@@ -43,6 +43,7 @@
         v-bind:key="allPosts.id"
       >
         <div class="recentPost__onePost" :id="allPosts.id">
+          <font-awesome-icon class="deletePostCross" :icon="['fas', 'times']" @click="deletePost"/>
           <div class="recentPost__onePost--user">
             <div class="recentPost__onePost--user__pic">
               <img v-if="allPosts.User.imageUrl == null" alt="photo de profil" src="../assets/default-profile-pic.jpg" />
@@ -145,6 +146,8 @@ export default {
           function () {
             self.mode = "visualize";
             self.$store.dispatch("getAllPosts");
+            self.content = "";
+            self.attachment = ""
           },
           function (error) {
             console.log(error);
@@ -178,9 +181,24 @@ export default {
         .then(
           function () {
             self.$store.dispatch("getAllPosts");
+            self.comment = ""
           }
         );
     },
+    deletePost(event) {
+      const self = this;
+      let postId = event.path[2].getAttribute('id');
+      if (postId == null) {
+        postId = event.path[1].getAttribute('id');
+      }
+      this.$store
+        .dispatch("deletePost", postId)
+        .then(
+          function () {
+            self.$store.dispatch("getAllPosts");
+          }
+        );
+    }
   },
 };
 </script>
@@ -240,6 +258,7 @@ export default {
 .recentPost {
   margin-top: 1rem;
   &__onePost {
+    position: relative;
     margin-top: 2rem;
     padding: 1rem 0;
     // border: 2px #9e9a9a solid;
@@ -247,6 +266,15 @@ export default {
     background-color: #161b22;
     width: 90vw;
     max-width: 50rem;
+    .deletePostCross {
+      position: absolute;
+      top : 1rem;
+      right: 1rem;
+      &:hover {
+        color : red;
+        cursor: pointer;
+      }
+    }
     &--user {
       display: flex;
       margin-left: 1rem;
@@ -255,7 +283,7 @@ export default {
         height: 3rem;
         overflow: hidden;
         border-radius: 50%;
-        border: 3px white solid;
+        border: 2px white solid;
         img {
           width: 3rem;
           height: 3rem;
@@ -324,7 +352,7 @@ export default {
           height: 1.5rem;
           overflow: hidden;
           border-radius: 50%;
-          border: 1.5px white solid;
+          border: 1px white solid;
           img {
             width: 1.5rem;
             height: 1.5rem;
