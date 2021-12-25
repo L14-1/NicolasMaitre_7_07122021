@@ -89,7 +89,7 @@ module.exports = {
             },
             {
                 model: models.Comment,
-                attributes: ['userId', 'name', 'lastname', 'imageUrl', 'comment']
+                attributes: ['id', 'userId', 'name', 'lastname', 'imageUrl', 'comment']
             }]
         }).then(function (posts) {
             if (posts) {

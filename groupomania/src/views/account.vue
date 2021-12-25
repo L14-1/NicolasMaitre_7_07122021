@@ -201,18 +201,12 @@ export default {
       }
       &--btn {
         bottom: -0.6rem;
-        // width: 8rem;
-        // height: 2rem;
-        // background-color: #555658;
         border: none;
         color: #acb8c8;
         cursor: pointer;
         &:hover {
           color: red;
         }
-        // input[type="file"] {
-        // display: none;
-        // }
         .pencilPicture {
           position: relative;
           top: -9rem;
@@ -236,7 +230,7 @@ export default {
     &__description {
       textarea {
         padding: 0.25rem;
-        background-color: #555658;
+        background-color: #3a3b3c;
         width: 15rem;
         border-radius: 0.5rem;
         border: none;
@@ -247,7 +241,7 @@ export default {
   input {
     background-color: grey;
     border-radius: 0.5rem;
-    background-color: #555658;
+    background-color: #3a3b3c;
     color: #acb8c8;
     border: none;
   }

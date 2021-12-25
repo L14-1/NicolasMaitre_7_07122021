@@ -174,6 +174,25 @@ export default new Vuex.Store({
         .catch(function () {      
         });
     },
+    updatePost: ({commit}, postInfos) => {
+      commit('setStatus', 'loading');
+      let postId = postInfos.get('postId');
+      postInfos.delete('postId');
+      return new Promise((resolve, reject) => {
+        commit;
+        instance.put(`/posts/${postId}`, postInfos, {headers: {
+          'Content-Type' : 'multipart/form-data; boundary="----arbitrary boundary"  '
+        }})
+        .then(function (res) {
+          commit('setStatus', 'updated');
+          resolve(res);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_updating_post');
+          reject(error);
+        });
+      });
+    },
     likePost: ({commit}, postId) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
@@ -224,6 +243,41 @@ export default new Vuex.Store({
         });
       });
     },
+    deleteComment: ({commit}, commentInfos) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        let commentId = commentInfos
+        instance.delete(`/comment/${commentId}/delete`)
+        .then(function (res) {
+          commit('setStatus', 'deleted');
+          resolve(res);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_deleting_comment');
+          reject(error);
+        });
+      });
+    },
+    updateComment: ({commit}, comment) => {
+      commit('setStatus', 'loading');
+      console.log(comment.comment)
+      return new Promise((resolve, reject) => {
+        commit;
+        let commentId = comment.id
+        instance.put(`/comment/${commentId}/update`, {
+          comment: comment.comment
+        })
+        .then(function (res) {
+          commit('setStatus', 'updated');
+          resolve(res);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_updating_comment');
+          reject(error);
+        });
+      });
+    }
   },
   modules: {
   }

@@ -200,8 +200,8 @@ export default {
       width: 95%;
       height: 2rem;
       border-radius: 0.5rem;
-      border: 2px #9e9a9a solid;
-      background-color: #555658;
+      border: none;
+      background-color: #3a3b3c;
       color: #acb8c8;
     }
     button {
@@ -214,7 +214,7 @@ export default {
       cursor: pointer;
     }
     .disabled__btn {
-      border: 2px #9e9a9a solid;
+      border: 1px #9e9a9a solid;
     }
   }
 }

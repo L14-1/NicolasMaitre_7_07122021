@@ -1,7 +1,7 @@
 <template>
   <div>
     <navBar />
-    <div class="home">
+    <div class="home" :class="{ homeBlur: mode == 'modifyPost' }">
       <p class="welcome-message">
         Bonjour {{ user.name }} {{ user.lastname }}, <br />
         que souhaitez-vous partager aujourd'hui ?
@@ -12,7 +12,7 @@
         @click="writeAPostSwitch()"
       >
         <font-awesome-icon
-          v-if="mode == 'visualize'"
+          v-if="mode != 'writeAPost'"
           :icon="['fas', 'pencil-alt']"
         />
         <textarea
@@ -25,13 +25,13 @@
         />
         <div class="write-a-post__btns">
           <input
-          type="file"
-          id="attachment"
-          accept=".jpeg, .png, .jpg"
-          @change="loadAttachment"
-          v-if="mode == 'writeAPost'"
+            type="file"
+            id="attachment"
+            accept=".jpeg, .png, .jpg"
+            @change="loadAttachment"
+            v-if="mode == 'writeAPost'"
           />
-          <button v-if="mode == 'writeAPost'" @click.prevent="createPost()">
+          <button v-if="mode == 'writeAPost' && content != ''" @click.prevent="createPost()">
             <font-awesome-icon :icon="['fas', 'paper-plane']" />
           </button>
         </div>
@@ -43,46 +43,137 @@
         v-bind:key="allPosts.id"
       >
         <div class="recentPost__onePost" :id="allPosts.id">
-          <font-awesome-icon class="deletePostCross" :icon="['fas', 'times']" @click="deletePost"/>
-          <font-awesome-icon class="editPostPencil" :icon="['fas', 'edit']" @click="deletePost"/>
+          <font-awesome-icon
+            class="deletePostCross"
+            :icon="['fas', 'times']"
+            @click="deletePost"
+            v-if="allPosts.UserId == user.id"
+          />
+          <font-awesome-icon
+            class="editPostPencil"
+            :icon="['fas', 'edit']"
+            @click="updatePost"
+            v-if="allPosts.UserId == user.id"
+          />
           <div class="recentPost__onePost--user">
             <div class="recentPost__onePost--user__pic">
-              <img v-if="allPosts.User.imageUrl == null" alt="photo de profil" src="../assets/default-profile-pic.jpg" />
-              <img v-if="allPosts.User.imageUrl != null" alt="photo de profil" :src="allPosts.User.imageUrl" />
+              <img
+                v-if="allPosts.User.imageUrl == null"
+                alt="photo de profil"
+                src="../assets/default-profile-pic.jpg"
+              />
+              <img
+                v-if="allPosts.User.imageUrl != null"
+                alt="photo de profil"
+                :src="allPosts.User.imageUrl"
+              />
             </div>
-            <a v-if="[[allPosts.UserId]] != [[user.userId]]" :href="'user?id=' + [[allPosts.UserId]]">{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a>
-            <a v-else href="account">{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a>
+            <a
+              v-if="allPosts.UserId != user.id"
+              :href="'user?id=' + [[allPosts.UserId]]"
+              >{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a
+            >
+            <a v-else href="account"
+              >{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a
+            >
           </div>
           <div class="recentPost__onePost--message">
             <p>{{ allPosts.content }}</p>
-            <img v-if="allPosts.attachment != null" alt="image de description du post" :src="allPosts.attachment" />
+            <img
+              v-if="allPosts.attachment != null"
+              alt="image de description du post"
+              :src="allPosts.attachment"
+            />
           </div>
           <div class="recentPost__onePost--btns">
             <div class="recentPost__onePost--btns__like">
-              <font-awesome-icon :icon="['fas', 'heart']" class="pointer_icon" :class="{ likeActive: allPosts.Likes.some(like => like['userId'] === userId)}" @click.prevent="likePost" />
-              <p v-if="allPosts.Likes.length == 0">Soyez le premier à aimer !</p>
+              <font-awesome-icon
+                :icon="['fas', 'heart']"
+                class="pointer_icon"
+                :class="{
+                  likeActive: allPosts.Likes.some(
+                    (like) => like['userId'] === userId
+                  ),
+                }"
+                @click.prevent="likePost"
+              />
+              <p v-if="allPosts.Likes.length == 0">
+                Soyez le premier à aimer !
+              </p>
+              <p v-else-if="allPosts.Likes.length == 1">
+                {{ allPosts.Likes.length }} personne aiment ca
+              </p>
               <p v-else>{{ allPosts.Likes.length }} personnes aiment ca</p>
             </div>
           </div>
-          <div class="recentPost__onePost--comments" v-for="allPostsComments in allPosts.Comments" v-bind:key="allPostsComments.id">
-            <div class="recentPost__onePost--comments--user">
-              <font-awesome-icon class="deleteCommentCross" :icon="['fas', 'times']"/>
+          <div
+            class="recentPost__onePost--comments"
+            v-for="allPostsComments in allPosts.Comments"
+            v-bind:key="allPostsComments.id"
+          >
+            <div class="recentPost__onePost--comments--user" :id="'comment_' + allPostsComments.id">
+              <font-awesome-icon
+                class="deleteCommentCross"
+                :icon="['fas', 'times']"
+                v-if="allPostsComments.userId == user.id"
+                @click="deleteComment"
+              />
+              <font-awesome-icon
+                class="editCommentPencil"
+                :icon="['fas', 'edit']"
+                @click="updateComment"
+                v-if="allPostsComments.userId == user.id"
+              />
               <div class="recentPost__onePost--comments--user__pic">
                 <img alt="pdp" :src="allPostsComments.imageUrl" />
               </div>
-              <a :href="'user?id=' + [[allPostsComments.userId]]">{{ allPostsComments.name }} {{ allPostsComments.lastname }}</a>
+              <a v-if="allPostsComments.userId != user.id" :href="'user?id=' + [[allPostsComments.userId]]"
+                >{{ allPostsComments.name }} {{ allPostsComments.lastname }}</a
+              >
+              <a v-else href="account"
+                >{{ allPostsComments.name }} {{ allPostsComments.lastname }}</a
+              >
             </div>
             <div class="recentPost__onePost--comments--message">
-              <p>{{ allPostsComments.comment }}</p>
+              <input v-model="commentNew" :placeholder="allPostsComments.comment" v-if="mode == 'updateComment' && allPostsComments.id == commentId" class="commentInput"/>
+              <p v-else >{{ allPostsComments.comment }}</p>
             </div>
           </div>
           <form class="recentPost__onePost--enterYourComment">
-            <input v-model="comment" id="comment" placeholder="commenter" required />
-            <button @click.prevent="commentPost">
+            <input
+              v-model="comment"
+              placeholder="commenter"
+              required
+            />
+            <button @click.prevent="commentPost" v-if="comment != ''">
               <font-awesome-icon :icon="['fas', 'paper-plane']" />
             </button>
           </form>
         </div>
+      </div>
+    </div>
+    <div class="modifyPost" v-if="mode == 'modifyPost'">
+      <div class="modifyPost__container">
+        <font-awesome-icon
+          class="modifyPost__container__cross"
+          :icon="['fas', 'times']"
+          @click="notModifyPost"
+        />
+        <form class="modifyPost__container__form">
+          <textarea
+            class="modifyPost__container__form__content"
+            placeholder="Votre nouveau message ..."
+            v-model="content"
+            type="text"
+          />
+          <input
+            class="modifyPost__container__form__attachment"
+            type="file"
+            accept=".jpeg, .png, .jpg"
+            @change="loadAttachment"
+          />
+          <button class="modifyPost__container__form__button" @click.prevent="modifyPost">Modifier</button>
+        </form>
       </div>
     </div>
   </div>
@@ -110,8 +201,11 @@ export default {
       mode: "visualize",
       content: "",
       attachment: "",
-      userId: JSON.parse(localStorage.getItem('user')).userId,
-      comment: ""
+      userId: JSON.parse(localStorage.getItem("user")).userId,
+      comment: "",
+      commentNew: "",
+      postId: null,
+      commentId: null,
     };
   },
   computed: {
@@ -140,66 +234,126 @@ export default {
     createPost: function () {
       const self = this;
       const formData = new FormData();
-      formData.append('content', this.content);
-      formData.append('attachment', this.attachment);
-      this.$store
-        .dispatch("createPost", formData)
-        .then(
-          function () {
-            self.mode = "visualize";
-            self.$store.dispatch("getAllPosts");
-            self.content = "";
-            self.attachment = ""
-          },
-          function (error) {
-            console.log(error);
-          }
-        );
+      formData.append("content", this.content);
+      formData.append("attachment", this.attachment);
+      this.$store.dispatch("createPost", formData).then(
+        function () {
+          self.mode = "visualize";
+          self.$store.dispatch("getAllPosts");
+          self.content = "";
+          self.attachment = "";
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
     },
     likePost(event) {
       const self = this;
-      let postId = event.path[4].getAttribute('id');
+      let postId = event.path[4].getAttribute("id");
 
-      this.$store
-        .dispatch("likePost", postId)
-        .then(
-          function () {
-            self.$store.dispatch("getAllPosts");
-          }
-        );
+      this.$store.dispatch("likePost", postId).then(function () {
+        self.$store.dispatch("getAllPosts");
+      });
     },
     commentPost(event) {
       const self = this;
-      let postId = event.path[2].getAttribute('id');
+      let postId = event.path[2].getAttribute("id");
       if (postId == null) {
-        postId = event.path[4].getAttribute('id');
+        postId = event.path[4].getAttribute("id");
       }
 
       this.$store
         .dispatch("commentPost", {
           postId: postId,
-          comment: this.comment
+          comment: this.comment,
         })
-        .then(
-          function () {
-            self.$store.dispatch("getAllPosts");
-            self.comment = ""
-          }
-        );
+        .then(function () {
+          self.$store.dispatch("getAllPosts");
+          self.comment = "";
+        });
+    },
+    deleteComment(event) {
+      const self = this;
+      if (this.mode == 'updateComment') {
+        this.mode = "visualize";
+        this.comment = "";
+        this.commentId = null;
+      } else {
+        let commentId = event.path[2].getAttribute("id");
+        if (commentId == null) {
+          commentId = event.path[1].getAttribute("id");
+        }
+  
+        commentId = commentId.split('_')[1]
+  
+        this.$store.dispatch("deleteComment", commentId).then(function () {
+          self.$store.dispatch("getAllPosts");
+        });
+      }
     },
     deletePost(event) {
       const self = this;
-      let postId = event.path[2].getAttribute('id');
+      let postId = event.path[2].getAttribute("id");
       if (postId == null) {
-        postId = event.path[1].getAttribute('id');
+        postId = event.path[1].getAttribute("id");
       }
-      this.$store
-        .dispatch("deletePost", postId)
-        .then(
-          function () {
-            self.$store.dispatch("getAllPosts");
-          }
-        );
+      this.$store.dispatch("deletePost", postId).then(function () {
+        self.$store.dispatch("getAllPosts");
+      });
+    },
+    updatePost(event) {
+      this.mode = "modifyPost";
+      let postId = event.path[2].getAttribute("id");
+      if (postId == null) {
+        postId = event.path[1].getAttribute("id");
+      }
+      this.postId = postId
+    },
+    notModifyPost() {
+      this.mode = "visualize";
+      this.content = "",
+      this.attachment = ""
+    },
+    modifyPost() {
+      const self = this;
+      const formData = new FormData();
+      formData.append("content", this.content);
+      formData.append("attachment", this.attachment);
+      formData.append("postId", this.postId);
+      this.$store.dispatch("updatePost", formData).then(
+        function () {
+          self.mode = "visualize";
+          self.$store.dispatch("getAllPosts");
+          self.content = "";
+          self.attachment = "";
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
+    },
+    updateComment(event) {
+
+      let commentId = event.path[2].getAttribute("id");
+      if (commentId == null) {
+        commentId = event.path[1].getAttribute("id");
+      }
+      commentId = commentId.split('_')[1]
+
+      if (this.mode == 'updateComment') {
+        this.$store.dispatch("updateComment", {
+          id: commentId,
+          comment: this.commentNew
+        });
+        this.mode = "visualize";
+        this.commentNew = "";
+        this.$store.dispatch("getAllPosts");
+      } else {
+        this.mode = "updateComment";
+        this.commentId = commentId;
+      }
+      this.$store.dispatch("getAllPosts");
     }
   },
 };
@@ -231,7 +385,7 @@ export default {
       padding: 0.5rem;
       margin-bottom: 0.5rem;
       border-radius: 0.5rem;
-      background-color: #555658;
+      background-color: #3a3b3c;
       width: 80%;
       border: none;
       resize: none;
@@ -243,7 +397,7 @@ export default {
         padding: 0 2rem;
         height: 2rem;
         border-radius: 0.5rem;
-        background-color: #555658;
+        background-color: #3a3b3c;
         border: none;
         color: #acb8c8;
         cursor: pointer;
@@ -252,6 +406,67 @@ export default {
         }
         &:last-child:hover {
           border: 1px #00b300 solid;
+        }
+      }
+    }
+  }
+}
+.homeBlur {
+  filter : blur(10px);
+}
+.modifyPost {
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__container {
+    position: relative;
+    background-color: #161b22;
+    padding: 2rem 0;
+    border-radius: 1rem;
+    width: 90vw;
+    max-width: 30rem;
+    &__cross {
+      position: absolute;
+      top : 0.75rem;
+      right : 0.75rem;
+      cursor: pointer;
+      &:hover {
+        color: red;
+      }
+    }
+    &__form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      &__content {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-radius: 0.5rem;
+        background-color: #3a3b3c;
+        width: 80%;
+        border: none;
+        resize: none;
+      }
+      &__attachment {
+        border-radius: 0.5rem;
+        background-color: #3a3b3c;
+        margin-bottom: 2rem;
+      }
+      &__button {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border: 1px #acb8c8 solid;
+        background-color: transparent;
+        color: #acb8c8;
+        cursor: pointer;
+        &:hover {
+          background-color: #3a3b3c;
         }
       }
     }
@@ -270,19 +485,19 @@ export default {
     max-width: 50rem;
     .deletePostCross {
       position: absolute;
-      top : 1rem;
+      top: 1rem;
       right: 1rem;
       &:hover {
-        color : red;
+        color: red;
         cursor: pointer;
       }
     }
     .editPostPencil {
       position: absolute;
-      top : 1rem;
+      top: 1rem;
       right: 2.5rem;
       &:hover {
-        color : green;
+        color: green;
         cursor: pointer;
       }
     }
@@ -303,7 +518,7 @@ export default {
       }
       a {
         padding: 0.75rem 1rem;
-        color : #acb8c8;
+        color: #acb8c8;
         text-decoration: none;
         &:hover {
           font-weight: 700;
@@ -315,30 +530,30 @@ export default {
       flex-direction: column;
       margin: 1rem;
       p {
-        margin-left : 5%;
-        margin-bottom : 2rem;
-        width : 90%;
-        text-align : left;
+        margin-left: 5%;
+        margin-bottom: 2rem;
+        width: 90%;
+        text-align: left;
       }
     }
     &--btns {
       display: flex;
-      
+
       .pointer_icon {
         cursor: pointer;
       }
       .likeActive {
-        color : rgb(255, 0, 200);
+        color: rgb(255, 0, 200);
       }
       &__like {
         width: 100%;
-        display : flex;
+        display: flex;
         flex-direction: row;
         justify-content: center;
         p {
-        font-size: 70%;
-        margin-left : 0.5rem;
-      }
+          font-size: 70%;
+          margin-left: 0.5rem;
+        }
         &:hover {
           color: rgb(255, 0, 200);
         }
@@ -355,23 +570,33 @@ export default {
     }
     &--comments {
       position: relative;
-      background-color: #242424;
-      margin : 1rem 1rem;
-      padding : 0.5rem 0.5rem;
+      background-color: #3a3b3c;
+      margin: 1rem 1rem;
+      padding: 0.5rem 0.5rem;
       border-radius: 1rem;
       .deleteCommentCross {
         position: absolute;
-        top : 0.5rem;
+        top: 0.5rem;
         right: 0.75rem;
         font-size: 0.75rem;
         &:hover {
-          color : red;
+          color: red;
           cursor: pointer;
+        }
       }
+      .editCommentPencil {
+        position: absolute;
+        top: 0.5rem;
+        right: 2rem;
+        font-size: 0.75rem;
+        &:hover {
+          color: green;
+          cursor: pointer;
+        }
       }
       &--user {
         display: flex;
-        
+
         &__pic {
           width: 1.5rem;
           height: 1.5rem;
@@ -387,29 +612,36 @@ export default {
         a {
           padding: 0.3rem 1rem;
           font-size: 0.9rem;
-          color : #acb8c8;
+          color: #acb8c8;
           text-decoration: none;
           &:hover {
-          font-weight: 700;
-        }
+            font-weight: 700;
+          }
         }
       }
       &--message {
         display: flex;
         margin: 0.5rem 1rem;
         font-size: 0.8rem;
+        .commentInput {
+          background-color: #3a3b3c;
+          border : none;
+          &:focus {
+            outline: none;
+          }
+        }
       }
     }
     &--enterYourComment {
       display: flex;
       justify-content: space-around;
-      margin-top : 2rem;
+      margin-top: 2rem;
       input,
       button {
         margin-bottom: 0.5rem;
         height: 2rem;
         border-radius: 0.5rem;
-        background-color: #555658;
+        background-color: #3a3b3c;
       }
       button {
         width: 15%;
