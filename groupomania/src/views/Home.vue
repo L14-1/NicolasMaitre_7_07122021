@@ -44,6 +44,7 @@
       >
         <div class="recentPost__onePost" :id="allPosts.id">
           <font-awesome-icon class="deletePostCross" :icon="['fas', 'times']" @click="deletePost"/>
+          <font-awesome-icon class="editPostPencil" :icon="['fas', 'edit']" @click="deletePost"/>
           <div class="recentPost__onePost--user">
             <div class="recentPost__onePost--user__pic">
               <img v-if="allPosts.User.imageUrl == null" alt="photo de profil" src="../assets/default-profile-pic.jpg" />
@@ -63,8 +64,9 @@
               <p v-else>{{ allPosts.Likes.length }} personnes aiment ca</p>
             </div>
           </div>
-          <div class="recentPost__onePost--comments" v-for="allPostsComments in allPosts.Comments" v-bind:key="allPostsComments.userId">
+          <div class="recentPost__onePost--comments" v-for="allPostsComments in allPosts.Comments" v-bind:key="allPostsComments.id">
             <div class="recentPost__onePost--comments--user">
+              <font-awesome-icon class="deleteCommentCross" :icon="['fas', 'times']"/>
               <div class="recentPost__onePost--comments--user__pic">
                 <img alt="pdp" :src="allPostsComments.imageUrl" />
               </div>
@@ -275,6 +277,15 @@ export default {
         cursor: pointer;
       }
     }
+    .editPostPencil {
+      position: absolute;
+      top : 1rem;
+      right: 2.5rem;
+      &:hover {
+        color : green;
+        cursor: pointer;
+      }
+    }
     &--user {
       display: flex;
       margin-left: 1rem;
@@ -343,10 +354,24 @@ export default {
       }
     }
     &--comments {
+      position: relative;
+      background-color: #242424;
+      margin : 1rem 1rem;
+      padding : 0.5rem 0.5rem;
+      border-radius: 1rem;
+      .deleteCommentCross {
+        position: absolute;
+        top : 0.5rem;
+        right: 0.75rem;
+        font-size: 0.75rem;
+        &:hover {
+          color : red;
+          cursor: pointer;
+      }
+      }
       &--user {
         display: flex;
-        margin-left: 2rem;
-        margin-top: 1rem;
+        
         &__pic {
           width: 1.5rem;
           height: 1.5rem;
@@ -371,7 +396,7 @@ export default {
       }
       &--message {
         display: flex;
-        margin: 0.5rem 5rem;
+        margin: 0.5rem 1rem;
         font-size: 0.8rem;
       }
     }

@@ -23,6 +23,7 @@ exports.router = (function() {
     apiRouter.post('/posts/new/', multerAttachment, postsCtrl.createPost);
     apiRouter.route("/posts/").get(postsCtrl.listPosts);
     apiRouter.route("/posts/:postId").delete(postsCtrl.deletePost);
+    apiRouter.route("/posts/:postId").put(multerAttachment, postsCtrl.updatePost);
 
 
     // Likes route
@@ -30,6 +31,8 @@ exports.router = (function() {
 
     // Comment routes
     apiRouter.post('/posts/:postId/comment', commentsCtrl.commentPost);
+    apiRouter.delete('/comment/:commentId/delete', commentsCtrl.deleteComment);
+    apiRouter.put('/comment/:commentId/update', commentsCtrl.updateComment);
 
     return apiRouter;
 })();
