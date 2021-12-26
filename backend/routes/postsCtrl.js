@@ -114,14 +114,31 @@ module.exports = {
         return res.status(400).json({ 'error': 'invalid parameters' });
         }
 
+        let userDeleting = await models.User.findOne({
+            where: {id: userId}
+          });
+
         let postFound = await models.Post.findOne({
             where: {id: postId}
         });
 
         if (postFound) {
-            if (postFound.attachment) {
-                var filename = postFound.attachment.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () => {
+            if (postFound.userId == userId || userDeleting.isAdmin == 1) {
+                if (postFound.attachment) {
+                    var filename = postFound.attachment.split('/images/')[1];
+                    fs.unlink(`images/${filename}`, () => {
+                        models.Comment.destroy({
+                            where: { postId: postId}
+                        });
+                        models.Like.destroy({
+                            where: { postId: postId}
+                        });
+                        models.Post.destroy({
+                            where: { id: postId}
+                        });
+                        res.status(200).send({ 'message': 'post deleted'})
+                     })
+                } else {
                     models.Comment.destroy({
                         where: { postId: postId}
                     });
@@ -132,18 +149,9 @@ module.exports = {
                         where: { id: postId}
                     });
                     res.status(200).send({ 'message': 'post deleted'})
-                 })
+                }
             } else {
-                models.Comment.destroy({
-                    where: { postId: postId}
-                });
-                models.Like.destroy({
-                    where: { postId: postId}
-                });
-                models.Post.destroy({
-                    where: { id: postId}
-                });
-                res.status(200).send({ 'message': 'post deleted'})
+                res.status(400).send({ 'error': 'user deleting is not admin'})
             }
         } else {
             res.status(400).send({ 'error': 'cannot find post'})
