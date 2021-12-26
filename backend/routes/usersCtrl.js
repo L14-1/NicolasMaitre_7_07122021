@@ -255,13 +255,25 @@ module.exports = {
 
         if (userFound) {
             if (userFound.imageUrl != null) {
-                var filename = userFound.imageUrl.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () => {
-                   
-                    for ( let i = 0; i < postFounds.length; i++ ) {
-                        if (postFounds[i].attachment) {
-                            var attachment = postFounds[i].attachment.split('/images/')[1];
-                            fs.unlink(`images/${attachment}`, () => {
+       
+                    var filename = userFound.imageUrl.split('/images/')[1];
+                    fs.unlink(`images/${filename}`, () => {
+                       
+                        for ( let i = 0; i < postFounds.length; i++ ) {
+                            if (postFounds[i].attachment) {
+                                var attachment = postFounds[i].attachment.split('/images/')[1];
+                                fs.unlink(`images/${attachment}`, () => {
+                                    models.Comment.destroy({
+                                        where: { postId: postFounds[i].id}
+                                    });
+                                    models.Like.destroy({
+                                        where: { postId: postFounds[i].id}
+                                    });
+                                    models.Post.destroy({
+                                        where: { id: postFounds[i].id}
+                                    });
+                                })
+                            } else {
                                 models.Comment.destroy({
                                     where: { postId: postFounds[i].id}
                                 });
@@ -271,29 +283,21 @@ module.exports = {
                                 models.Post.destroy({
                                     where: { id: postFounds[i].id}
                                 });
-                            })
-                        } else {
-                            models.Comment.destroy({
-                                where: { postId: postFounds[i].id}
+                            }
+                        };
+                        async function deleting() {
+                            await models.Comment.destroy({
+                                where: { userId: userId}
                             });
-                            models.Like.destroy({
-                                where: { postId: postFounds[i].id}
+                            await models.Like.destroy({
+                                where: { userId: userId}
                             });
-                            models.Post.destroy({
-                                where: { id: postFounds[i].id}
+                            await models.User.destroy({
+                                where: { id: userId }
                             });
                         }
-                    };
-                    models.Comment.destroy({
-                        where: { userId: userId}
-                    });
-                    models.Like.destroy({
-                        where: { userId: userId}
-                    });
-                    models.User.destroy({
-                        where: { id: userId }
-                    });
-                })
+                        deleting();
+                    })
                 res.status(200).send({ 'message': 'user deleted'})
             } else {
                
@@ -323,15 +327,18 @@ module.exports = {
                         });
                     }
                 };
-                models.Comment.destroy({
-                    where: { userId: userId}
-                });
-                models.Like.destroy({
-                    where: { userId: userId}
-                });
-                models.User.destroy({
-                    where: { id: userId }
-                });
+                async function deleting() {
+                    await models.Comment.destroy({
+                        where: { userId: userId}
+                    });
+                    await models.Like.destroy({
+                        where: { userId: userId}
+                    });
+                    await models.User.destroy({
+                        where: { id: userId }
+                    });
+                };
+                deleting();
                 res.status(200).send({ 'message': 'user deleted'})
             }
         } else {
