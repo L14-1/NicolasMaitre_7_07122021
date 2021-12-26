@@ -144,7 +144,7 @@ module.exports = {
             return res.status(400).json({ 'error': 'wrong token' });
 
         models.User.findOne({
-            attributes: ['id', 'email', 'name', 'lastname', 'bio', 'imageUrl'],
+            attributes: ['id', 'email', 'name', 'lastname', 'bio', 'imageUrl', 'isAdmin'],
             where: { id: userId }
         }).then(function (user) {
             if (user) {
@@ -222,7 +222,7 @@ module.exports = {
         }
 
         models.User.findOne({
-            attributes: ['id', 'bio', 'name', 'lastname', 'imageUrl'],
+            attributes: ['id', 'bio', 'name', 'lastname', 'imageUrl', 'email'],
             where: { id: userId }
         }).then(function (user) {
             if (user) {
@@ -249,20 +249,37 @@ module.exports = {
             where: { id: userId }
         });
 
+        let userRequest = await models.User.findOne({
+            where: { id: Id }
+        });
+
         let postFounds = await models.Post.findAll({
             where: { userId: userId}
         });
 
-        if (userFound) {
-            if (userFound.imageUrl != null) {
-       
-                    var filename = userFound.imageUrl.split('/images/')[1];
-                    fs.unlink(`images/${filename}`, () => {
-                       
-                        for ( let i = 0; i < postFounds.length; i++ ) {
-                            if (postFounds[i].attachment) {
-                                var attachment = postFounds[i].attachment.split('/images/')[1];
-                                fs.unlink(`images/${attachment}`, () => {
+        if (userFound.id == userRequest.id || userRequest.isAdmin == 1) {
+
+            if (userFound) {
+                if (userFound.imageUrl != null) {
+           
+                        var filename = userFound.imageUrl.split('/images/')[1];
+                        fs.unlink(`images/${filename}`, () => {
+                           
+                            for ( let i = 0; i < postFounds.length; i++ ) {
+                                if (postFounds[i].attachment) {
+                                    var attachment = postFounds[i].attachment.split('/images/')[1];
+                                    fs.unlink(`images/${attachment}`, () => {
+                                        models.Comment.destroy({
+                                            where: { postId: postFounds[i].id}
+                                        });
+                                        models.Like.destroy({
+                                            where: { postId: postFounds[i].id}
+                                        });
+                                        models.Post.destroy({
+                                            where: { id: postFounds[i].id}
+                                        });
+                                    })
+                                } else {
                                     models.Comment.destroy({
                                         where: { postId: postFounds[i].id}
                                     });
@@ -272,8 +289,28 @@ module.exports = {
                                     models.Post.destroy({
                                         where: { id: postFounds[i].id}
                                     });
-                                })
-                            } else {
+                                }
+                            };
+                            async function deleting() {
+                                await models.Comment.destroy({
+                                    where: { userId: userId}
+                                });
+                                await models.Like.destroy({
+                                    where: { userId: userId}
+                                });
+                                await models.User.destroy({
+                                    where: { id: userId }
+                                });
+                            }
+                            deleting();
+                        })
+                    res.status(200).send({ 'message': 'user deleted'})
+                } else {
+                   
+                    for ( let i = 0; i < postFounds.length; i++ ) {
+                        if (postFounds[i].attachment) {
+                            var attachment = postFounds[i].attachment.split('/images/')[1];
+                            fs.unlink(`images/${attachment}`, () => {
                                 models.Comment.destroy({
                                     where: { postId: postFounds[i].id}
                                 });
@@ -283,28 +320,8 @@ module.exports = {
                                 models.Post.destroy({
                                     where: { id: postFounds[i].id}
                                 });
-                            }
-                        };
-                        async function deleting() {
-                            await models.Comment.destroy({
-                                where: { userId: userId}
-                            });
-                            await models.Like.destroy({
-                                where: { userId: userId}
-                            });
-                            await models.User.destroy({
-                                where: { id: userId }
-                            });
-                        }
-                        deleting();
-                    })
-                res.status(200).send({ 'message': 'user deleted'})
-            } else {
-               
-                for ( let i = 0; i < postFounds.length; i++ ) {
-                    if (postFounds[i].attachment) {
-                        var attachment = postFounds[i].attachment.split('/images/')[1];
-                        fs.unlink(`images/${attachment}`, () => {
+                            })
+                        } else {
                             models.Comment.destroy({
                                 where: { postId: postFounds[i].id}
                             });
@@ -314,36 +331,27 @@ module.exports = {
                             models.Post.destroy({
                                 where: { id: postFounds[i].id}
                             });
-                        })
-                    } else {
-                        models.Comment.destroy({
-                            where: { postId: postFounds[i].id}
+                        }
+                    };
+                    async function deleting() {
+                        await models.Comment.destroy({
+                            where: { userId: userId}
                         });
-                        models.Like.destroy({
-                            where: { postId: postFounds[i].id}
+                        await models.Like.destroy({
+                            where: { userId: userId}
                         });
-                        models.Post.destroy({
-                            where: { id: postFounds[i].id}
+                        await models.User.destroy({
+                            where: { id: userId }
                         });
-                    }
-                };
-                async function deleting() {
-                    await models.Comment.destroy({
-                        where: { userId: userId}
-                    });
-                    await models.Like.destroy({
-                        where: { userId: userId}
-                    });
-                    await models.User.destroy({
-                        where: { id: userId }
-                    });
-                };
-                deleting();
-                res.status(200).send({ 'message': 'user deleted'})
+                    };
+                    deleting();
+                    res.status(200).send({ 'message': 'user deleted'})
+                }
+            } else {
+                res.status(400).json({ 'error': 'user not found' });
             }
-        } else {
-            res.status(400).json({ 'error': 'user not found' });
         }
+
 
     }
 };

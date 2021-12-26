@@ -39,6 +39,7 @@ export default new Vuex.Store({
       name: '',
       lastname: '',
       bio: '',
+      isAdmin: null
     },
     oneUserInfos: {
       userId: null,

@@ -81,7 +81,7 @@ module.exports = {
             offset: (!isNaN(offset)) ? offset : null,
             include: [{
                 model: models.User,
-                attributes: ['name', 'lastname', 'imageUrl']
+                attributes: ['name', 'lastname', 'imageUrl', 'isAdmin']
             },
             {
                 model: models.Like,
