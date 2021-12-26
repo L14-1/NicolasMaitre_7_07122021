@@ -47,7 +47,7 @@
             class="deletePostCross"
             :icon="['fas', 'times']"
             @click="deletePost"
-            v-if="allPosts.UserId == user.id"
+            v-if="allPosts.UserId == user.id || user.isAdmin"
           />
           <font-awesome-icon
             class="editPostPencil"
@@ -70,12 +70,20 @@
             </div>
             <a
               v-if="allPosts.UserId != user.id"
-              :href="'user?id=' + [[allPosts.UserId]]"
-              >{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a
-            >
-            <a v-else href="account"
-              >{{ allPosts.User.name }} {{ allPosts.User.lastname }}</a
-            >
+              :href="'user?id=' + [[allPosts.UserId]]">
+              <font-awesome-icon
+              :icon="['fas', 'user-shield']"
+              v-if="allPosts.User.isAdmin" 
+              />
+              {{ allPosts.User.name }} {{ allPosts.User.lastname }} 
+            </a>
+            <a v-else href="account">
+              <font-awesome-icon
+              :icon="['fas', 'user-shield']"
+              v-if="allPosts.User.isAdmin" 
+              />
+              {{ allPosts.User.name }} {{ allPosts.User.lastname }}
+            </a>
           </div>
           <div class="recentPost__onePost--message">
             <p>{{ allPosts.content }}</p>
@@ -115,7 +123,7 @@
               <font-awesome-icon
                 class="deleteCommentCross"
                 :icon="['fas', 'times']"
-                v-if="allPostsComments.userId == user.id"
+                v-if="allPostsComments.userId == user.id || user.isAdmin"
                 @click="deleteComment"
               />
               <font-awesome-icon
@@ -127,9 +135,9 @@
               <div class="recentPost__onePost--comments--user__pic">
                 <img alt="pdp" :src="allPostsComments.imageUrl" />
               </div>
-              <a v-if="allPostsComments.userId != user.id" :href="'user?id=' + [[allPostsComments.userId]]"
-                >{{ allPostsComments.name }} {{ allPostsComments.lastname }}</a
-              >
+              <a v-if="allPostsComments.userId != user.id" :href="'user?id=' + [[allPostsComments.userId]]">
+                {{ allPostsComments.name }} {{ allPostsComments.lastname }}
+              </a>
               <a v-else href="account"
                 >{{ allPostsComments.name }} {{ allPostsComments.lastname }}</a
               >

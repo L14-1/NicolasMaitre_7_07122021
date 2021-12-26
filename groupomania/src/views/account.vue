@@ -36,6 +36,10 @@
             @change="loadPicture"
             v-if="mode == 'modifyProfil'"
           />
+          <font-awesome-icon
+              :icon="['fas', 'user-shield']"
+              v-if="user.isAdmin && mode != 'modifyProfil'" 
+          />
 
           <div class="profile--form__title">
             <p v-if="mode == 'account'">{{ user.name }}</p>

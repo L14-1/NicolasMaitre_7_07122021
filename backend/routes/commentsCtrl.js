@@ -46,18 +46,28 @@ module.exports = {
       return res.status(400).json({ 'error': 'invalid parameters' });
     }
 
+    let userDeleting = await models.User.findOne({
+      where: {id: userId}
+    });
+
     let commentFound = await models.Comment.findOne({
       where: {id: commentId}
     });
 
     if (commentFound) {
-      models.Comment.destroy({
-        where: { id: commentId}
-      });
-      res.status(200).send({ 'message': 'comment deleted'})
+      if (commentFound.userId == userId || userDeleting.isAdmin == 1) {
+        models.Comment.destroy({
+          where: { id: commentId}
+        });
+        res.status(200).send({ 'message': 'comment deleted'})
+      } else {
+        res.status(400).send({ 'error': 'user deleting is not admin'})
+      }
     } else {
       res.status(400).send({ 'error': 'cannot find comment'})
     }
+    
+
 
   },
   updateComment:  async function(req, res) {
