@@ -69,7 +69,7 @@
           <button
             v-if="mode == 'modifyProfil'"
             @click.prevent="changeProfil()"
-            class="button--disconnect"
+            class="button--update"
           >
             MODIFIER
           </button>
@@ -82,14 +82,18 @@
       >
         DECONNEXION
       </button>
+      <button
+        v-if="mode == 'modifyProfil'"
+        @click="deleteAccount"
+        class="button--disconnect"
+      >
+        SUPPRIMER LE COMPTE
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-// +-----------------------------------------------------------------------+
-// |  TODO possibilité de modifier le profil (bio / image / nom / prénom)  |
-// +-----------------------------------------------------------------------+
 
 import { mapState } from "vuex";
 import navBar from "@/components/navBar.vue";
@@ -153,6 +157,17 @@ export default {
           console.log(error);
         }
       );
+    },
+    deleteAccount() {
+      if (confirm("Supprimer votre compte est action définitive, vous ne pouvez revenir en arrière ... Etes vous sûr ?")) {
+        const self = this;
+        let userId = this.user.id
+        this.$store.dispatch("deleteAccount", userId)
+        .then(function () {
+          self.$store.commit("logout");
+          self.$router.push("/");
+        });
+      }
     },
   },
 };
@@ -258,6 +273,22 @@ export default {
       border: none;
       cursor: pointer;
       background-color: red;
+      transition: all 0.5s ease-out;
+    }
+  }
+  .button--update {
+    margin-top: 3rem;
+    padding: 0 1rem;
+    height: 2rem;
+    border: 1px rgb(57, 138, 57) solid;
+    border-radius: 0.5rem;
+    color: #acb8c8;
+    background-color: transparent;
+    transition: all 0.5s ease-out;
+    &:hover {
+      border: none;
+      cursor: pointer;
+      background-color: rgb(57, 138, 57);
       transition: all 0.5s ease-out;
     }
   }

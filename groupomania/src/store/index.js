@@ -277,7 +277,23 @@ export default new Vuex.Store({
           reject(error);
         });
       });
-    }
+    },
+    deleteAccount: ({commit}, user) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        let userId = user
+        instance.delete(`/users/${userId}`)
+        .then(function (res) {
+          commit('setStatus', 'account deleted');
+          resolve(res);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_deleting_account');
+          reject(error);
+        });
+      });
+    },
   },
   modules: {
   }
