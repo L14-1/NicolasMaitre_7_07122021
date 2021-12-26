@@ -18,6 +18,7 @@ exports.router = (function() {
     apiRouter.route("/users/me/").get(usersCtrl.getUserProfile);
     apiRouter.put('/users/me/', multer, usersCtrl.updateUserProfile);
     apiRouter.route("/users/:userId/").get(usersCtrl.getOneUserProfile);
+    apiRouter.delete('/users/:userId/', multer, usersCtrl.deleteAccount);
 
     // Posts routes
     apiRouter.post('/posts/new/', multerAttachment, postsCtrl.createPost);

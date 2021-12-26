@@ -280,27 +280,31 @@ export default {
         this.comment = "";
         this.commentId = null;
       } else {
-        let commentId = event.path[2].getAttribute("id");
-        if (commentId == null) {
-          commentId = event.path[1].getAttribute("id");
+        if (confirm("Etes vous sûr de vouloir supprimer ce commentaire ?")) {
+          let commentId = event.path[2].getAttribute("id");
+          if (commentId == null) {
+            commentId = event.path[1].getAttribute("id");
+          }
+    
+          commentId = commentId.split('_')[1]
+    
+          this.$store.dispatch("deleteComment", commentId).then(function () {
+            self.$store.dispatch("getAllPosts");
+          });
         }
-  
-        commentId = commentId.split('_')[1]
-  
-        this.$store.dispatch("deleteComment", commentId).then(function () {
-          self.$store.dispatch("getAllPosts");
-        });
       }
     },
     deletePost(event) {
-      const self = this;
-      let postId = event.path[2].getAttribute("id");
-      if (postId == null) {
-        postId = event.path[1].getAttribute("id");
+      if (confirm("Etes vous sûr de vouloir supprimer ce post ?")) {
+        const self = this;
+        let postId = event.path[2].getAttribute("id");
+        if (postId == null) {
+          postId = event.path[1].getAttribute("id");
+        }
+        this.$store.dispatch("deletePost", postId).then(function () {
+          self.$store.dispatch("getAllPosts");
+        });
       }
-      this.$store.dispatch("deletePost", postId).then(function () {
-        self.$store.dispatch("getAllPosts");
-      });
     },
     updatePost(event) {
       this.mode = "modifyPost";

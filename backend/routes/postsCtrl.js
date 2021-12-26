@@ -121,7 +121,6 @@ module.exports = {
         if (postFound) {
             if (postFound.attachment) {
                 var filename = postFound.attachment.split('/images/')[1];
-                console.log(filename)
                 fs.unlink(`images/${filename}`, () => {
                     models.Comment.destroy({
                         where: { postId: postId}

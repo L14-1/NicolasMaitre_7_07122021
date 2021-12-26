@@ -211,7 +211,7 @@ module.exports = {
         var headerAuth = req.headers['authorization'];
         var Id = jwtUtils.getUserId(headerAuth);
 
-        if (Id < 0)
+        if (Id < 0) 
             return res.status(400).json({ 'error': 'wrong token' });
         
         
@@ -234,5 +234,109 @@ module.exports = {
             res.status(500).json({ 'error': 'cannot fetch user' });
         });
         
+    },
+    deleteAccount : async function (req, res) {
+        // Getting auth header
+        var headerAuth = req.headers['authorization'];
+        var Id = jwtUtils.getUserId(headerAuth);
+
+        var userId = parseInt(req.params.userId);
+
+        if (Id < 0) 
+            return res.status(400).json({ 'error': 'wrong token' });
+        
+        let userFound = await models.User.findOne({
+            where: { id: userId }
+        });
+
+        let postFounds = await models.Post.findAll({
+            where: { userId: userId}
+        });
+
+        if (userFound) {
+            if (userFound.imageUrl != null) {
+                var filename = userFound.imageUrl.split('/images/')[1];
+                fs.unlink(`images/${filename}`, () => {
+                   
+                    for ( let i = 0; i < postFounds.length; i++ ) {
+                        if (postFounds[i].attachment) {
+                            var attachment = postFounds[i].attachment.split('/images/')[1];
+                            fs.unlink(`images/${attachment}`, () => {
+                                models.Comment.destroy({
+                                    where: { postId: postFounds[i].id}
+                                });
+                                models.Like.destroy({
+                                    where: { postId: postFounds[i].id}
+                                });
+                                models.Post.destroy({
+                                    where: { id: postFounds[i].id}
+                                });
+                            })
+                        } else {
+                            models.Comment.destroy({
+                                where: { postId: postFounds[i].id}
+                            });
+                            models.Like.destroy({
+                                where: { postId: postFounds[i].id}
+                            });
+                            models.Post.destroy({
+                                where: { id: postFounds[i].id}
+                            });
+                        }
+                    };
+                    models.Comment.destroy({
+                        where: { userId: userId}
+                    });
+                    models.Like.destroy({
+                        where: { userId: userId}
+                    });
+                    models.User.destroy({
+                        where: { id: userId }
+                    });
+                })
+                res.status(200).send({ 'message': 'user deleted'})
+            } else {
+               
+                for ( let i = 0; i < postFounds.length; i++ ) {
+                    if (postFounds[i].attachment) {
+                        var attachment = postFounds[i].attachment.split('/images/')[1];
+                        fs.unlink(`images/${attachment}`, () => {
+                            models.Comment.destroy({
+                                where: { postId: postFounds[i].id}
+                            });
+                            models.Like.destroy({
+                                where: { postId: postFounds[i].id}
+                            });
+                            models.Post.destroy({
+                                where: { id: postFounds[i].id}
+                            });
+                        })
+                    } else {
+                        models.Comment.destroy({
+                            where: { postId: postFounds[i].id}
+                        });
+                        models.Like.destroy({
+                            where: { postId: postFounds[i].id}
+                        });
+                        models.Post.destroy({
+                            where: { id: postFounds[i].id}
+                        });
+                    }
+                };
+                models.Comment.destroy({
+                    where: { userId: userId}
+                });
+                models.Like.destroy({
+                    where: { userId: userId}
+                });
+                models.User.destroy({
+                    where: { id: userId }
+                });
+                res.status(200).send({ 'message': 'user deleted'})
+            }
+        } else {
+            res.status(400).json({ 'error': 'user not found' });
+        }
+
     }
 };
