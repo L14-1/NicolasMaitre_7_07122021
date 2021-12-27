@@ -109,7 +109,7 @@
                 Soyez le premier à aimer !
               </p>
               <p v-else-if="allPosts.Likes.length == 1">
-                {{ allPosts.Likes.length }} personne aiment ca
+                1 personne aime ca
               </p>
               <p v-else>{{ allPosts.Likes.length }} personnes aiment ca</p>
             </div>
@@ -265,6 +265,9 @@ export default {
     likePost(event) {
       const self = this;
       let postId = event.path[4].getAttribute("id");
+       if (postId == null) {
+         postId = event.path[3].getAttribute("id");
+       }
 
       this.$store.dispatch("likePost", postId).then(function () {
         self.$store.dispatch("getAllPosts");
@@ -274,6 +277,9 @@ export default {
       const self = this;
       let postId = event.path[2].getAttribute("id");
       if (postId == null) {
+        if (postId == null) {
+          postId = event.path[3].getAttribute("id");
+        }
         postId = event.path[4].getAttribute("id");
       }
 
