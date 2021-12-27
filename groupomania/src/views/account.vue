@@ -151,7 +151,6 @@ export default {
       formData.append("name", this.name);
       formData.append("lastname", this.lastname);
 
-      console.log(formData);
       this.$store.dispatch("changeProfil", formData).then(
         function () {
           self.mode = "account";

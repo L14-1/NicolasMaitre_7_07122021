@@ -262,7 +262,6 @@ export default new Vuex.Store({
     },
     updateComment: ({commit}, comment) => {
       commit('setStatus', 'loading');
-      console.log(comment.comment)
       return new Promise((resolve, reject) => {
         commit;
         let commentId = comment.id
