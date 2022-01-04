@@ -21,7 +21,7 @@
           <p>{{ user.lastname }}</p>
         </div>
         <div class="profile--form__description">
-          <p>" {{ user.bio }} "</p>
+          <p v-if="user.bio">" {{ user.bio }} "</p>
         </div>
         <div class="profile--form__mail">
           <a :href="'mailto:' + user.email">

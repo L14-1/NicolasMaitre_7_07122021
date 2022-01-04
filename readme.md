@@ -20,7 +20,12 @@ Pour ce projet j'ai utilisé les technologies suivantes :
 
 ## Backend
 
-Accédez au dossier backend puis exécutez, dans votre terminal, la commande :
+Accédez au dossier backend pour créer un fichier ".env" que vous remplirez comme suit :
+
+USER=(votre username)
+PASSWORD=(votre mot de passe)
+
+puis exécutez, dans votre terminal, la commande :
 ```console
     npm install
 ```

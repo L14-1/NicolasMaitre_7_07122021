@@ -1,7 +1,10 @@
 <template>
   <div>
     <navBar />
-    <div class="home" :class="{ homeBlur: mode == 'modifyPost' || status == 'loading'}">
+    <div
+      class="home"
+      :class="{ homeBlur: mode == 'modifyPost' || status == 'loading' }"
+    >
       <p class="welcome-message">
         Bonjour {{ user.name }} {{ user.lastname }}, <br />
         que souhaitez-vous partager aujourd'hui ?
@@ -15,6 +18,7 @@
           v-if="mode != 'writeAPost'"
           :icon="['fas', 'pencil-alt']"
         />
+        <transition name="fade">
         <textarea
           v-model="content"
           v-if="mode == 'writeAPost'"
@@ -23,7 +27,9 @@
           rows="7"
           required
         />
+        </transition>
         <div class="write-a-post__btns">
+          <transition name="fade">
           <input
             type="file"
             id="attachment"
@@ -31,9 +37,15 @@
             @change="loadAttachment"
             v-if="mode == 'writeAPost'"
           />
-          <button v-if="mode == 'writeAPost' && content != ''" @click.prevent="createPost()">
+          </transition>
+          <transition name="fade">
+          <button
+            v-if="mode == 'writeAPost' && content != ''"
+            @click.prevent="createPost()"
+          >
             <font-awesome-icon :icon="['fas', 'paper-plane']" />
           </button>
+          </transition>
         </div>
       </div>
 
@@ -70,17 +82,18 @@
             </div>
             <a
               v-if="allPosts.UserId != user.id"
-              :href="'user?id=' + [[allPosts.UserId]]">
+              :href="'user?id=' + [[allPosts.UserId]]"
+            >
               <font-awesome-icon
-              :icon="['fas', 'user-shield']"
-              v-if="allPosts.User.isAdmin" 
+                :icon="['fas', 'user-shield']"
+                v-if="allPosts.User.isAdmin"
               />
-              {{ allPosts.User.name }} {{ allPosts.User.lastname }} 
+              {{ allPosts.User.name }} {{ allPosts.User.lastname }}
             </a>
             <a v-else href="account">
               <font-awesome-icon
-              :icon="['fas', 'user-shield']"
-              v-if="allPosts.User.isAdmin" 
+                :icon="['fas', 'user-shield']"
+                v-if="allPosts.User.isAdmin"
               />
               {{ allPosts.User.name }} {{ allPosts.User.lastname }}
             </a>
@@ -108,9 +121,7 @@
               <p v-if="allPosts.Likes.length == 0">
                 Soyez le premier à aimer !
               </p>
-              <p v-else-if="allPosts.Likes.length == 1">
-                1 personne aime ca
-              </p>
+              <p v-else-if="allPosts.Likes.length == 1">1 personne aime ca</p>
               <p v-else>{{ allPosts.Likes.length }} personnes aiment ca</p>
             </div>
           </div>
@@ -119,7 +130,10 @@
             v-for="allPostsComments in allPosts.Comments"
             v-bind:key="allPostsComments.id"
           >
-            <div class="recentPost__onePost--comments--user" :id="'comment_' + allPostsComments.id">
+            <div
+              class="recentPost__onePost--comments--user"
+              :id="'comment_' + allPostsComments.id"
+            >
               <font-awesome-icon
                 class="deleteCommentCross"
                 :icon="['fas', 'times']"
@@ -135,7 +149,10 @@
               <div class="recentPost__onePost--comments--user__pic">
                 <img alt="pdp" :src="allPostsComments.imageUrl" />
               </div>
-              <a v-if="allPostsComments.userId != user.id" :href="'user?id=' + [[allPostsComments.userId]]">
+              <a
+                v-if="allPostsComments.userId != user.id"
+                :href="'user?id=' + [[allPostsComments.userId]]"
+              >
                 {{ allPostsComments.name }} {{ allPostsComments.lastname }}
               </a>
               <a v-else href="account"
@@ -143,16 +160,19 @@
               >
             </div>
             <div class="recentPost__onePost--comments--message">
-              <input v-model="commentNew" :placeholder="allPostsComments.comment" v-if="mode == 'updateComment' && allPostsComments.id == commentId" class="commentInput"/>
-              <p v-else >{{ allPostsComments.comment }}</p>
+              <input
+                v-model="commentNew"
+                :placeholder="allPostsComments.comment"
+                v-if="
+                  mode == 'updateComment' && allPostsComments.id == commentId
+                "
+                class="commentInput"
+              />
+              <p v-else>{{ allPostsComments.comment }}</p>
             </div>
           </div>
           <form class="recentPost__onePost--enterYourComment">
-            <input
-              v-model="comment"
-              placeholder="commenter"
-              required
-            />
+            <input v-model="comment" placeholder="commenter" required />
             <button @click.prevent="commentPost" v-if="comment != ''">
               <font-awesome-icon :icon="['fas', 'paper-plane']" />
             </button>
@@ -160,30 +180,37 @@
         </div>
       </div>
     </div>
-    <div class="modifyPost" v-if="mode == 'modifyPost'">
-      <div class="modifyPost__container">
-        <font-awesome-icon
-          class="modifyPost__container__cross"
-          :icon="['fas', 'times']"
-          @click="notModifyPost"
-        />
-        <form class="modifyPost__container__form">
-          <textarea
-            class="modifyPost__container__form__content"
-            placeholder="Votre nouveau message ..."
-            v-model="content"
-            type="text"
+    <transition name="fade">
+      <div class="modifyPost" v-if="mode == 'modifyPost'">
+        <div class="modifyPost__container">
+          <font-awesome-icon
+            class="modifyPost__container__cross"
+            :icon="['fas', 'times']"
+            @click="notModifyPost"
           />
-          <input
-            class="modifyPost__container__form__attachment"
-            type="file"
-            accept=".jpeg, .png, .jpg"
-            @change="loadAttachment"
-          />
-          <button class="modifyPost__container__form__button" @click.prevent="modifyPost">Modifier</button>
-        </form>
+          <form class="modifyPost__container__form">
+            <textarea
+              class="modifyPost__container__form__content"
+              placeholder="Votre nouveau message ..."
+              v-model="content"
+              type="text"
+            />
+            <input
+              class="modifyPost__container__form__attachment"
+              type="file"
+              accept=".jpeg, .png, .jpg"
+              @change="loadAttachment"
+            />
+            <button
+              class="modifyPost__container__form__button"
+              @click.prevent="modifyPost"
+            >
+              Modifier
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </transition>
     <div class="loading_spinner" v-if="status == 'loading'">
       <div class="lds-ripple">
         <div></div>
@@ -226,7 +253,7 @@ export default {
     ...mapState({
       status: "status",
       user: "userInfos",
-      allPosts: "allPosts"
+      allPosts: "allPosts",
     }),
     opened: function () {
       if (this.mode == "visualize") {
@@ -265,9 +292,9 @@ export default {
     likePost(event) {
       const self = this;
       let postId = event.path[4].getAttribute("id");
-       if (postId == null) {
-         postId = event.path[3].getAttribute("id");
-       }
+      if (postId == null) {
+        postId = event.path[3].getAttribute("id");
+      }
 
       this.$store.dispatch("likePost", postId).then(function () {
         self.$store.dispatch("getAllPosts");
@@ -295,7 +322,7 @@ export default {
     },
     deleteComment(event) {
       const self = this;
-      if (this.mode == 'updateComment') {
+      if (this.mode == "updateComment") {
         this.mode = "visualize";
         this.comment = "";
         this.commentId = null;
@@ -305,9 +332,9 @@ export default {
           if (commentId == null) {
             commentId = event.path[1].getAttribute("id");
           }
-    
-          commentId = commentId.split('_')[1]
-    
+
+          commentId = commentId.split("_")[1];
+
           this.$store.dispatch("deleteComment", commentId).then(function () {
             self.$store.dispatch("getAllPosts");
           });
@@ -332,12 +359,11 @@ export default {
       if (postId == null) {
         postId = event.path[1].getAttribute("id");
       }
-      this.postId = postId
+      this.postId = postId;
     },
     notModifyPost() {
       this.mode = "visualize";
-      this.content = "",
-      this.attachment = ""
+      (this.content = ""), (this.attachment = "");
     },
     modifyPost() {
       const self = this;
@@ -358,17 +384,16 @@ export default {
       );
     },
     updateComment(event) {
-
       let commentId = event.path[2].getAttribute("id");
       if (commentId == null) {
         commentId = event.path[1].getAttribute("id");
       }
-      commentId = commentId.split('_')[1]
+      commentId = commentId.split("_")[1];
 
-      if (this.mode == 'updateComment') {
+      if (this.mode == "updateComment") {
         this.$store.dispatch("updateComment", {
           id: commentId,
-          comment: this.commentNew
+          comment: this.commentNew,
         });
         this.mode = "visualize";
         this.commentNew = "";
@@ -378,7 +403,7 @@ export default {
         this.commentId = commentId;
       }
       this.$store.dispatch("getAllPosts");
-    }
+    },
   },
 };
 </script>
@@ -436,20 +461,20 @@ export default {
   }
 }
 .homeBlur {
-  filter : blur(10px);
+  filter: blur(10px);
 }
 .loading_spinner {
   position: fixed;
-  top : 0;
-  width : 100vw;
-  height : 100vh;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   .lds-ripple {
     display: inline-block;
     position: relative;
-    
+
     width: 80px;
     height: 80px;
     div {
@@ -499,8 +524,8 @@ export default {
     max-width: 30rem;
     &__cross {
       position: absolute;
-      top : 0.75rem;
-      right : 0.75rem;
+      top: 0.75rem;
+      right: 0.75rem;
       cursor: pointer;
       &:hover {
         color: red;
@@ -691,7 +716,7 @@ export default {
         font-size: 0.8rem;
         .commentInput {
           background-color: #3a3b3c;
-          border : none;
+          border: none;
           &:focus {
             outline: none;
           }
@@ -728,5 +753,14 @@ export default {
       }
     }
   }
+}
+
+// animations
+.fade-enter-active {
+  transition: opacity 1s ease-out;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
