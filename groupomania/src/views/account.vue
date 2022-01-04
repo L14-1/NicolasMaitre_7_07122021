@@ -1,7 +1,10 @@
 <template>
   <div>
     <navBar />
-    <div class="profile">
+    <div 
+      class="profile"
+      :class="{ profileBlur: status == 'loading' }"
+    >
       <font-awesome-icon
         v-if="mode == 'account'"
         class="modify-icon"
@@ -94,6 +97,12 @@
         SUPPRIMER LE COMPTE
       </button>
     </div>
+    <div class="loading_spinner" v-if="status == 'loading'">
+      <div class="lds-ripple">
+        <div></div>
+        <div></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -126,6 +135,7 @@ export default {
   },
   computed: {
     ...mapState({
+      status: "status",
       user: "userInfos",
     }),
   },
@@ -154,6 +164,9 @@ export default {
       this.$store.dispatch("changeProfil", formData).then(
         function () {
           self.mode = "account";
+          self.name = "";
+          self.lastname = "";
+          self.bio = "";
           self.$store.dispatch("getUserInfos");
         },
         function (error) {
@@ -209,7 +222,7 @@ export default {
       top: 12rem;
       left : 50%;
       transform: translateX(-50%);
-      border: 4px white solid;
+      border: 4px $profil-border-color solid;
       box-shadow: 0 0 0 10px $background-color;
       width: 10rem;
       height: 10rem;
@@ -253,6 +266,7 @@ export default {
         padding: 0.25rem;
         background-color: $box-color-accent;
         width: 15rem;
+        color: $text-color;
         border-radius: 0.5rem;
         border: none;
         resize: none;
@@ -296,6 +310,51 @@ export default {
       background-color: $update-color;
       transition: all 0.5s ease-out;
     }
+  }
+}
+.profileBlur {
+  filter: blur(10px);
+}
+.loading_spinner {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .lds-ripple {
+    display: inline-block;
+    position: relative;
+
+    width: 80px;
+    height: 80px;
+    div {
+      position: absolute;
+      border: 4px solid #fff;
+      opacity: 1;
+      border-radius: 50%;
+      animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+      &:nth-child(2) {
+        animation-delay: -0.5s;
+      }
+    }
+  }
+}
+@keyframes lds-ripple {
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
   }
 }
 </style>

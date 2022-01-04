@@ -138,7 +138,7 @@ export default {
         color : $text-color;
         font-size: 2rem;
         &:hover {
-          color : #5f8ecc;
+          color : $like-color;
         }
       }
     }

@@ -123,7 +123,7 @@ module.exports = {
         });
 
         if (postFound) {
-            if (postFound.userId == userId || userDeleting.isAdmin == 1) {
+            if (postFound.UserId == userId || userDeleting.isAdmin == 1) {
                 if (postFound.attachment) {
                     var filename = postFound.attachment.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
