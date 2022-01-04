@@ -409,6 +409,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+@import '../assets/_variables.scss';
+
 .home {
   margin-top: 8rem;
   display: flex;
@@ -420,21 +423,22 @@ export default {
   }
   .visualize-mode {
     &:hover {
-      color: greenyellow;
+      color: $update-color;
       cursor: pointer;
     }
   }
   .write-a-post {
     padding: 1rem 0;
     border-radius: 1rem;
-    background-color: #161b22;
+    background-color: $box-color;
     width: 90vw;
     max-width: 50rem;
     textarea {
+      color: $text-color;
       padding: 0.5rem;
       margin-bottom: 0.5rem;
       border-radius: 0.5rem;
-      background-color: #3a3b3c;
+      background-color: $box-color-accent;
       width: 80%;
       border: none;
       resize: none;
@@ -446,15 +450,15 @@ export default {
         padding: 0 2rem;
         height: 2rem;
         border-radius: 0.5rem;
-        background-color: #3a3b3c;
+        background-color: $box-color-accent;
         border: none;
-        color: #acb8c8;
+        color: $text-color;
         cursor: pointer;
         &:hover {
-          border: 1px #9e9a9a solid;
+          border: 1px $text-color solid;
         }
         &:last-child:hover {
-          border: 1px #00b300 solid;
+          border: 1px $update-color solid;
         }
       }
     }
@@ -517,7 +521,7 @@ export default {
   justify-content: center;
   &__container {
     position: relative;
-    background-color: #161b22;
+    background-color: $box-color;
     padding: 2rem 0;
     border-radius: 1rem;
     width: 90vw;
@@ -528,7 +532,7 @@ export default {
       right: 0.75rem;
       cursor: pointer;
       &:hover {
-        color: red;
+        color: $delete-color;
       }
     }
     &__form {
@@ -539,25 +543,25 @@ export default {
         padding: 0.5rem;
         margin-bottom: 0.5rem;
         border-radius: 0.5rem;
-        background-color: #3a3b3c;
+        background-color: $box-color-accent;
         width: 80%;
         border: none;
         resize: none;
       }
       &__attachment {
         border-radius: 0.5rem;
-        background-color: #3a3b3c;
+        background-color: $box-color-accent;
         margin-bottom: 2rem;
       }
       &__button {
         padding: 0.5rem;
         border-radius: 0.5rem;
-        border: 1px #acb8c8 solid;
+        border: 1px $text-color solid;
         background-color: transparent;
-        color: #acb8c8;
+        color: $text-color;
         cursor: pointer;
         &:hover {
-          background-color: #3a3b3c;
+          background-color: $box-color-accent;
         }
       }
     }
@@ -569,9 +573,8 @@ export default {
     position: relative;
     margin-top: 2rem;
     padding: 1rem 0;
-    // border: 2px #9e9a9a solid;
     border-radius: 1rem;
-    background-color: #161b22;
+    background-color: $box-color;
     width: 90vw;
     max-width: 50rem;
     .deletePostCross {
@@ -579,7 +582,7 @@ export default {
       top: 1rem;
       right: 1rem;
       &:hover {
-        color: red;
+        color: $delete-color;
         cursor: pointer;
       }
     }
@@ -588,7 +591,7 @@ export default {
       top: 1rem;
       right: 2.5rem;
       &:hover {
-        color: green;
+        color: $update-color;
         cursor: pointer;
       }
     }
@@ -600,7 +603,7 @@ export default {
         height: 3rem;
         overflow: hidden;
         border-radius: 50%;
-        border: 2px white solid;
+        border: 2px $profil-border-color solid;
         img {
           width: 3rem;
           height: 3rem;
@@ -609,7 +612,7 @@ export default {
       }
       a {
         padding: 0.75rem 1rem;
-        color: #acb8c8;
+        color: $text-color;
         text-decoration: none;
         &:hover {
           font-weight: 700;
@@ -634,7 +637,7 @@ export default {
         cursor: pointer;
       }
       .likeActive {
-        color: rgb(255, 0, 200);
+        color: $like-color;
       }
       &__like {
         width: 100%;
@@ -646,7 +649,7 @@ export default {
           margin-left: 0.5rem;
         }
         &:hover {
-          color: rgb(255, 0, 200);
+          color: $like-color;
         }
       }
       &::before,
@@ -656,12 +659,12 @@ export default {
         top: 0.5rem;
         width: 70vw;
         height: 1px;
-        background-color: #9e9a9a;
+        background-color: $text-color;
       }
     }
     &--comments {
       position: relative;
-      background-color: #3a3b3c;
+      background-color: $box-color-accent;
       margin: 1rem 1rem;
       padding: 0.5rem 0.5rem;
       border-radius: 1rem;
@@ -671,7 +674,7 @@ export default {
         right: 0.75rem;
         font-size: 0.75rem;
         &:hover {
-          color: red;
+          color: $delete-color;
           cursor: pointer;
         }
       }
@@ -681,7 +684,7 @@ export default {
         right: 2rem;
         font-size: 0.75rem;
         &:hover {
-          color: green;
+          color: $update-color;
           cursor: pointer;
         }
       }
@@ -693,7 +696,7 @@ export default {
           height: 1.5rem;
           overflow: hidden;
           border-radius: 50%;
-          border: 1px white solid;
+          border: 1px $profil-border-color solid;
           img {
             width: 1.5rem;
             height: 1.5rem;
@@ -703,7 +706,7 @@ export default {
         a {
           padding: 0.3rem 1rem;
           font-size: 0.9rem;
-          color: #acb8c8;
+          color: $text-color;
           text-decoration: none;
           &:hover {
             font-weight: 700;
@@ -715,7 +718,8 @@ export default {
         margin: 0.5rem 1rem;
         font-size: 0.8rem;
         .commentInput {
-          background-color: #3a3b3c;
+          color: $text-color;
+          background-color: $box-color-accent;
           border: none;
           &:focus {
             outline: none;
@@ -732,21 +736,22 @@ export default {
         margin-bottom: 0.5rem;
         height: 2rem;
         border-radius: 0.5rem;
-        background-color: #3a3b3c;
+        background-color: $box-color-accent;
       }
       button {
         width: 15%;
         border: none;
-        color: #acb8c8;
+        color: $text-color;
         transition: all 0.5s ease-out;
         &:hover {
           cursor: pointer;
-          background-color: #00b300;
-          border: 1px #9e9a9a solid;
+          background-color: $update-color;
+          border: 1px $text-color solid;
           transition: all 0.5s ease-out;
         }
       }
       input {
+        color: $text-color;
         padding: 0 0.5rem;
         width: 80%;
         border: none;

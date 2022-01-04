@@ -18,12 +18,15 @@
 </template>
 
 <style scoped lang="scss">
+
+@import '../assets/_variables.scss';
+
 #nav {
   overflow: hidden;
   font-size: 1rem;
   position: absolute;
-  border-bottom: 1px grey solid;
-  background-color: #30363d;
+  border-bottom: 1px $text-color solid;
+  background-color: $box-color-accent;
   top: 0;
   width: 100vw;
   height: 3rem;
@@ -31,13 +34,13 @@
   justify-content: space-between;
   align-items: center;
   a {
-    color: #acb8c8;
+    color: $text-color;
     text-decoration: none;
     &:hover {
       color: grey;
     }
     &.router-link-exact-active {
-      color: #42b983;
+      color: $update-color;
     }
   }
   .logo {

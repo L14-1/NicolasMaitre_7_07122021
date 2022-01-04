@@ -90,6 +90,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+@import '../assets/_variables.scss';
+
 .profile {
   margin-top: 8rem;
   display: flex;
@@ -100,7 +103,7 @@ export default {
     margin-top: 10rem;
     width: 90vw;
     max-width: 40rem;
-    background-color: #161b22;
+    background-color: $box-color;
     border-radius: 2rem;
     padding: 5rem 0;
     &__picture {
@@ -109,8 +112,8 @@ export default {
       top: 12rem;
       left: 50%;
       transform: translateX(-50%);
-      border: 4px white solid;
-      box-shadow: 0 0 0 10px #0d1117;
+      border: 4px $profil-border-color solid;
+      box-shadow: 0 0 0 10px $background-color;
       width: 10rem;
       height: 10rem;
       border-radius: 50%;
@@ -132,7 +135,7 @@ export default {
     &__mail {
       margin-top : 2rem;
       a {
-        color : #acb8c8;
+        color : $text-color;
         font-size: 2rem;
         &:hover {
           color : #5f8ecc;
@@ -144,15 +147,15 @@ export default {
     margin-top: 3rem;
     padding: 0 1rem;
     height: 2rem;
-    border: 1px red solid;
+    border: 1px $delete-color solid;
     border-radius: 0.5rem;
-    color: #acb8c8;
+    color: $text-color;
     background-color: transparent;
     transition: all 0.5s ease-out;
     &:hover {
       border: none;
       cursor: pointer;
-      background-color: red;
+      background-color: $delete-color;
       transition: all 0.5s ease-out;
     }
   }

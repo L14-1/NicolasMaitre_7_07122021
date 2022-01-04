@@ -177,6 +177,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+@import '../assets/_variables.scss';
+
 .profile {
   margin-top: 8rem;
   display: flex;
@@ -189,7 +192,7 @@ export default {
     right: 2rem;
     &:hover {
       cursor: pointer;
-      color: red;
+      color: $update-color;
     }
   }
 
@@ -197,7 +200,7 @@ export default {
     margin-top: 10rem;
     width : 90vw;
     max-width : 40rem;
-    background-color: #161b22;
+    background-color: $box-color;
     border-radius : 2rem;
     padding : 5rem 0;
     &__picture {
@@ -207,7 +210,7 @@ export default {
       left : 50%;
       transform: translateX(-50%);
       border: 4px white solid;
-      box-shadow: 0 0 0 10px #0d1117;
+      box-shadow: 0 0 0 10px $background-color;
       width: 10rem;
       height: 10rem;
       border-radius: 50%;
@@ -220,10 +223,10 @@ export default {
       &--btn {
         bottom: -0.6rem;
         border: none;
-        color: #acb8c8;
+        color: text-color;
         cursor: pointer;
         &:hover {
-          color: red;
+          color: $delete-color;
         }
         .pencilPicture {
           position: relative;
@@ -248,7 +251,7 @@ export default {
     &__description {
       textarea {
         padding: 0.25rem;
-        background-color: #3a3b3c;
+        background-color: $box-color-accent;
         width: 15rem;
         border-radius: 0.5rem;
         border: none;
@@ -257,10 +260,9 @@ export default {
     }
   }
   input {
-    background-color: grey;
+    background-color: $box-color-accent;
     border-radius: 0.5rem;
-    background-color: #3a3b3c;
-    color: #acb8c8;
+    color: $text-color;
     border: none;
   }
   .button--disconnect {
@@ -269,13 +271,13 @@ export default {
     height: 2rem;
     border: 1px red solid;
     border-radius: 0.5rem;
-    color: #acb8c8;
+    color: $text-color;
     background-color: transparent;
     transition: all 0.5s ease-out;
     &:hover {
       border: none;
       cursor: pointer;
-      background-color: red;
+      background-color: $delete-color;
       transition: all 0.5s ease-out;
     }
   }
@@ -283,15 +285,15 @@ export default {
     margin-top: 3rem;
     padding: 0 1rem;
     height: 2rem;
-    border: 1px rgb(57, 138, 57) solid;
+    border: 1px $update-color solid;
     border-radius: 0.5rem;
-    color: #acb8c8;
+    color: $text-color;
     background-color: transparent;
     transition: all 0.5s ease-out;
     &:hover {
       border: none;
       cursor: pointer;
-      background-color: rgb(57, 138, 57);
+      background-color: $update-color;
       transition: all 0.5s ease-out;
     }
   }

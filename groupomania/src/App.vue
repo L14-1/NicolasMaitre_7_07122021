@@ -5,6 +5,9 @@
 </template>
 
 <style lang="scss">
+
+@import './assets/_variables.scss';
+
 *,
 *:before,
 *:after {
@@ -15,12 +18,16 @@
   font-family: 'Montserrat', sans-serif;
 }
 
+
+
+// Scrollbar
+
 html {
     &::-webkit-scrollbar {
         width: 0.5rem;
     }
     &::-webkit-scrollbar-thumb {
-        background-color: grey;
+        background-color: $box-color-accent;
         border-radius: 2rem;
     }
     &::-webkit-scrollbar-track {
@@ -29,9 +36,10 @@ html {
     overflow-x: hidden;
 }
 
+// Base
 
 body {
-  background-color: #0d1117;
+  background-color: $background-color;
 }
 
 #app {
@@ -39,7 +47,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #acb8c8;
+  color: $text-color;
 }
 
 </style>

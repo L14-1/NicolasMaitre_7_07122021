@@ -176,15 +176,17 @@ export default {
 </script>
 
 <style lang="scss">
+
+@import '../assets/_variables.scss';
+
 .login {
-  // background-color: #ccffcc;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   .login_container {
     width: 25rem;
-    background-color: #161b22;
+    background-color: $box-color;
     border-radius: 1rem;
     padding: 2rem;
     img {
@@ -201,20 +203,20 @@ export default {
       height: 2rem;
       border-radius: 0.5rem;
       border: none;
-      background-color: #3a3b3c;
-      color: #acb8c8;
+      background-color: $box-color-accent;
+      color: $text-color;
     }
     button {
-      border: 2px #00b300 solid;
+      border: 2px $update-color solid;
       cursor: pointer;
     }
     .createAccountBtn {
-      color: blue;
+      color: $like-color;
       text-decoration: underline;
       cursor: pointer;
     }
     .disabled__btn {
-      border: 1px #9e9a9a solid;
+      border: 1px $text-color solid;
     }
   }
 }
