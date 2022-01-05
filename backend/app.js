@@ -1,4 +1,5 @@
 const express = require("express");
+// const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const path = require('path');
 const apiRouter = require("./apiRouter").router;
@@ -8,6 +9,7 @@ const app = express();
 var corsOptions = {
   origin: "*"
 };
+// app.use(helmet());
 
 app.use(cors(corsOptions));
 

@@ -191,7 +191,7 @@
           <form class="modifyPost__container__form">
             <textarea
               class="modifyPost__container__form__content"
-              placeholder="Votre nouveau message ..."
+              :placeholder="[[postText]]"
               v-model="content"
               type="text"
             />
@@ -247,6 +247,7 @@ export default {
       commentNew: "",
       postId: null,
       commentId: null,
+      postText: null,
     };
   },
   computed: {
@@ -360,10 +361,18 @@ export default {
         postId = event.path[1].getAttribute("id");
       }
       this.postId = postId;
+      let postText = event.path[2].firstElementChild.innerText
+      if (postText == null) {
+        postText = event.path[3].firstElementChild.innerText
+      }
+      postText = postText.split('\n\n')[1];
+      this.content = postText;
+      this.postText = postText;
+
     },
     notModifyPost() {
       this.mode = "visualize";
-      (this.content = ""), (this.attachment = "");
+      (this.content = ""), (this.attachment = ""), (this.postText = "");
     },
     modifyPost() {
       const self = this;
@@ -545,6 +554,7 @@ export default {
         border-radius: 0.5rem;
         background-color: $box-color-accent;
         width: 80%;
+        height: 5rem;
         border: none;
         resize: none;
       }
