@@ -9,17 +9,15 @@ const app = express();
 var corsOptions = {
   origin: "*"
 };
-// app.use(helmet());
 
 app.use(cors(corsOptions));
+
+// app.use(helmet());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 
-// app.get("/", (req, res) => {
-//   res.json({ message: "Welcome to Groupomania backend !" });
-// });
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

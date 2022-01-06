@@ -553,6 +553,7 @@ export default {
         margin-bottom: 0.5rem;
         border-radius: 0.5rem;
         background-color: $box-color-accent;
+        color : $text-color;
         width: 80%;
         height: 5rem;
         border: none;

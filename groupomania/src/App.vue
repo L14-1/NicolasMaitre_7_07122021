@@ -33,7 +33,7 @@ html {
     &::-webkit-scrollbar-track {
         background-color: none;
     }
-    overflow-x: hidden;
+    // overflow-x: hidden;
 }
 
 // Base
