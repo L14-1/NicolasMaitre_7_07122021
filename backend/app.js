@@ -1,5 +1,5 @@
 const express = require("express");
-// const helmet = require("helmet");
+const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const path = require('path');
 const apiRouter = require("./apiRouter").router;
@@ -12,12 +12,15 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-// app.use(helmet());
-
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

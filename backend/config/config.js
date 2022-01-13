@@ -1,25 +1,15 @@
 require('dotenv').config();
 
 module.exports = {
-  "development": {
-    "username": process.env.USER,
-    "password": process.env.PASSWORD,
-    "database": "groupomania_development",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
-  "test": {
-    "username": process.env.USER,
-    "password": process.env.PASSWORD,
-    "database": "groupomania_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
-  "production": {
-    "username": process.env.USER,
-    "password": process.env.PASSWORD,
-    "database": "groupomania_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+  HOST: "localhost",
+  USER: process.env.USER,
+  PASSWORD: process.env.PASSWORD,
+  DB: "groupomania_development",
+  dialect: "mysql",
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
   }
-}
+};
