@@ -222,12 +222,14 @@
         <div></div>
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import navBar from "@/components/navBar.vue";
+import Footer from "@/components/footer.vue";
 
 export default {
   name: "Home",
@@ -241,6 +243,7 @@ export default {
   },
   components: {
     navBar,
+    Footer,
   },
   data: function () {
     return {

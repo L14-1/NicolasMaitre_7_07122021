@@ -22,9 +22,10 @@
 @import '../assets/_variables.scss';
 
 #nav {
+  z-index: 999;
   overflow: hidden;
   font-size: 1rem;
-  position: absolute;
+  position: sticky;
   border-bottom: 1px $text-color solid;
   background-color: $box-color-accent;
   top: 0;

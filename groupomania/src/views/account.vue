@@ -109,6 +109,7 @@
         <div></div>
       </div>
     </div>
+    <!-- <Footer /> -->
   </div>
 </template>
 
@@ -116,7 +117,7 @@
 
 import { mapState } from "vuex";
 import navBar from "@/components/navBar.vue";
-// import axios from 'axios';
+// import Footer from "@/components/footer.vue";
 
 export default {
   name: "Account",
@@ -129,6 +130,7 @@ export default {
   },
   components: {
     navBar,
+    // Footer,
   },
   data: function () {
     return {
@@ -387,4 +389,5 @@ export default {
     font-size: 1.5rem;
   }
 }
+
 </style>
