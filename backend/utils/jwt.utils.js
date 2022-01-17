@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SIGN_SECRET = 'ever45dsrgv567dsvb45egrg4DRgerg46djop18rthsr4seg6sthsrze6piio7'
+const JWT_SIGN_SECRET = 'ever45dsrgv567dsvb45egrg4DRgerg46djop18rthsr4seg6sthsrze6piio7' // env
 //Exported functions
 module.exports ={
     generateTokenForUser: function(userData) {

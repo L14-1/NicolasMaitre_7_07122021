@@ -28,15 +28,20 @@
           required
         />
         </transition>
+        <img
+          v-if="urlImage"
+          alt="image de déscription"
+          :src="urlImage"
+        />
         <div class="write-a-post__btns">
-          <transition name="fade">
           <input
             type="file"
             id="attachment"
             accept=".jpeg, .png, .jpg"
             @change="loadAttachment"
-            v-if="mode == 'writeAPost'"
           />
+          <transition name="fade">
+          <label for="attachment" v-if="mode == 'writeAPost' && content != ''" class="imageSelector"><font-awesome-icon class="modify-picture" :icon="['fas', 'images']" /></label>
           </transition>
           <transition name="fade">
           <button
@@ -242,6 +247,7 @@ export default {
       mode: "visualize",
       content: "",
       attachment: "",
+      urlImage: null,
       userId: JSON.parse(localStorage.getItem("user")).userId,
       comment: "",
       commentNew: "",
@@ -272,6 +278,7 @@ export default {
     },
     loadAttachment(event) {
       this.attachment = event.target.files[0];
+      this.urlImage = URL.createObjectURL(this.attachment);
     },
     createPost: function () {
       const self = this;
@@ -284,6 +291,7 @@ export default {
           self.$store.dispatch("getAllPosts");
           self.content = "";
           self.attachment = "";
+          self.urlImage = null;
         },
         function (error) {
           console.log(error);
@@ -452,6 +460,11 @@ export default {
       border: none;
       resize: none;
     }
+    img {
+      object-fit: cover;
+      width : 80%;
+      border-radius: 0.5rem;
+    }
     &__btns {
       display: flex;
       justify-content: space-around;
@@ -468,6 +481,19 @@ export default {
         }
         &:last-child:hover {
           border: 1px $update-color solid;
+        }
+      }
+      #attachment {
+        display : none;
+      }
+      .imageSelector {
+        cursor: pointer;
+        &:hover {
+          color : $update-color;
+        }
+        .modify-picture {
+          margin-top : 0.5rem;
+          font-size: 1.5rem;
         }
       }
     }

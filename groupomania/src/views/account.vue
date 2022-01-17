@@ -21,14 +21,19 @@
         <form enctype="multipart/form-data">
           <div class="profile--form__picture">
             <img
-              v-if="user.imageUrl == null"
+              v-if="user.imageUrl == null && !urlImage"
               alt="photo de profil"
               src="../assets/default-profile-pic.jpg"
             />
             <img
-              v-if="user.imageUrl != null"
+              v-if="user.imageUrl != null && !urlImage"
               alt="photo de profil"
               :src="user.imageUrl"
+            />
+            <img
+              v-if="urlImage"
+              alt="photo de profil"
+              :src="urlImage"
             />
           </div>
 
@@ -39,6 +44,7 @@
             @change="loadPicture"
             v-if="mode == 'modifyProfil'"
           />
+          <label for="imageUrl" v-if="mode == 'modifyProfil'" class="imageSelector"><font-awesome-icon class="modify-picture" :icon="['fas', 'images']" /></label>
           <font-awesome-icon
               :icon="['fas', 'user-shield']"
               v-if="user.isAdmin && mode != 'modifyProfil'" 
@@ -131,6 +137,7 @@ export default {
       lastname: "",
       bio: "",
       imageUrl: null,
+      urlImage: null,
     };
   },
   computed: {
@@ -149,9 +156,16 @@ export default {
     },
     backToAccount: function () {
       this.mode = "account";
+      this.name = "";
+      this.lastname = "";
+      this.bio = "";
+      this.imageUrl = null;
+      this.urlImage = null;
     },
     loadPicture(event) {
       this.imageUrl = event.target.files[0];
+      this.urlImage = URL.createObjectURL(this.imageUrl);
+      console.log(this.urlImage)
     },
     changeProfil: function () {
       const self = this;
@@ -167,6 +181,8 @@ export default {
           self.name = "";
           self.lastname = "";
           self.bio = "";
+          self.imageUrl = null;
+          self.urlImage = null;
           self.$store.dispatch("getUserInfos");
         },
         function (error) {
@@ -355,6 +371,20 @@ export default {
     width: 72px;
     height: 72px;
     opacity: 0;
+  }
+}
+
+#imageUrl {
+  display : none;
+}
+.imageSelector {
+  cursor: pointer;
+  &:hover {
+    color : $update-color;
+  }
+  .modify-picture {
+    margin-top : 0.5rem;
+    font-size: 1.5rem;
   }
 }
 </style>
