@@ -1,11 +1,11 @@
 require('dotenv').config();
 
 module.exports = {
-  HOST: "localhost", //env
+  HOST: process.env.HOST,
   USER: process.env.USER,
   PASSWORD: process.env.PASSWORD,
-  DB: "groupomania_development", // env
-  dialect: "mysql", // env
+  DB: process.env.DB,
+  dialect: process.env.DIALECT,
   pool: {
     max: 5,
     min: 0,
