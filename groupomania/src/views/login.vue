@@ -12,8 +12,21 @@
             id="email"
             type="email"
             placeholder="  Adresse mail"
+            @change="emailCheck"
             required
           />
+        </div>
+        <div
+          class="invalid-checked-info"
+          v-if="!checkedEmail"
+        >
+          Adresse mail invalide
+        </div>
+        <div
+          class="invalid-checked-info"
+          v-if="mode == 'create' && status == 'error_create'"
+        >
+          Adresse mail déjà utilisée
         </div>
         <div>
           <input
@@ -22,7 +35,14 @@
             placeholder="  Prénom"
             required
             v-if="mode == 'create'"
+            @change="nameCheck"
           />
+        </div>
+        <div
+          class="invalid-checked-info"
+          v-if="mode == 'create' && !checkedName"
+        >
+          Prénom invalide.
         </div>
         <input
           v-model="lastname"
@@ -30,29 +50,37 @@
           placeholder="  Nom"
           required
           v-if="mode == 'create'"
+          @change="lastnameCheck"
         />
+        <div
+          class="invalid-checked-info"
+          v-if="mode == 'create' && !checkedlastname"
+        >
+          Nom invalide.
+        </div>
         <div>
           <input
             v-model="password"
             id="password"
             type="password"
             placeholder="  Mot de passe"
+            @change="passwordCheck"
             required
           />
         </div>
-
+        <div
+          class="invalid-checked-info"
+          v-if="!checkedPassword"
+        >
+          Entre 4 et 8 caractères et au moins un chiffre
+        </div>
         <div
           class="invalid-login-info"
           v-if="mode == 'login' && status == 'error_login'"
         >
           Adresse mail et/ou mot de passe invalide
         </div>
-        <div
-          class="invalid-login-info"
-          v-if="mode == 'create' && status == 'error_create'"
-        >
-          Adresse mail déjà utilisé
-        </div>
+        
 
         <button
           v-if="mode == 'login'"
@@ -99,6 +127,10 @@ export default {
       name: "",
       lastname: "",
       password: "",
+      checkedEmail: true,
+      checkedPassword: true,
+      checkedName: true,
+      checkedlastname: true,
     };
   },
   mounted: function () {
@@ -136,6 +168,39 @@ export default {
     },
     loginAccountSwitch: function () {
       this.mode = "login";
+    },
+    emailCheck() {
+      this.$store.state.status = '';
+      //eslint-disable-next-line
+      const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (EMAIL_REGEX.test(this.email)) {
+        this.checkedEmail = true;
+      } else {
+        this.checkedEmail = false;
+      }
+    },
+    passwordCheck() {
+      //eslint-disable-next-line
+      const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
+      if (PASSWORD_REGEX.test(this.password)) {
+        this.checkedPassword = true;
+      } else {
+        this.checkedPassword = false;
+      }
+    },
+    nameCheck() {
+      if (this.name.length >= 15 || this.name.length <= 2) {
+        this.checkedName = false;
+      } else {
+        this.checkedName = true;
+      }
+    },
+     lastnameCheck() {
+      if (this.lastname.length >= 15 || this.lastname.length <= 2) {
+        this.checkedlastname = false;
+      } else {
+        this.checkedlastname = true;
+      }
     },
     loginAccount: function () {
       const self = this;
@@ -196,9 +261,25 @@ export default {
     .invalid-login-info {
       margin: 1rem 0;
     }
+    .invalid-checked-info {
+      position: relative;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+      margin-top: 0.3rem;
+      text-align: left;
+      &::after {
+        content : "";
+        position : absolute;
+        bottom : -0.25rem;
+        left : 0;
+        width : 3rem;
+        height : 0.15rem;
+        background-color: red;
+      }
+    }
     input,
     button {
-      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
       width: 95%;
       height: 2rem;
       border-radius: 0.5rem;
