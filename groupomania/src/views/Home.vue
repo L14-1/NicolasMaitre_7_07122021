@@ -29,7 +29,7 @@
         />
         </transition>
         <img
-          v-if="urlImage"
+          v-if="urlImage && mode == 'writeAPost'"
           alt="image de déscription"
           :src="urlImage"
         />

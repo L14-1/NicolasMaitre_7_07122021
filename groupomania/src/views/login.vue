@@ -12,13 +12,13 @@
             id="email"
             type="email"
             placeholder="  Adresse mail"
-            @change="emailCheck"
+            @keyup="emailCheck"
             required
           />
         </div>
         <div
           class="invalid-checked-info"
-          v-if="!checkedEmail"
+          v-if="!checkedEmail && email != ''"
         >
           Adresse mail invalide
         </div>
@@ -35,12 +35,12 @@
             placeholder="  Prénom"
             required
             v-if="mode == 'create'"
-            @change="nameCheck"
+            @keyup="nameCheck"
           />
         </div>
         <div
           class="invalid-checked-info"
-          v-if="mode == 'create' && !checkedName"
+          v-if="mode == 'create' && !checkedName  && name != ''"
         >
           Prénom invalide.
         </div>
@@ -50,11 +50,11 @@
           placeholder="  Nom"
           required
           v-if="mode == 'create'"
-          @change="lastnameCheck"
+          @keyup="lastnameCheck"
         />
         <div
           class="invalid-checked-info"
-          v-if="mode == 'create' && !checkedlastname"
+          v-if="mode == 'create' && !checkedlastname && lastname != ''"
         >
           Nom invalide.
         </div>
@@ -64,13 +64,13 @@
             id="password"
             type="password"
             placeholder="  Mot de passe"
-            @change="passwordCheck"
+            @keyup="passwordCheck"
             required
           />
         </div>
         <div
           class="invalid-checked-info"
-          v-if="!checkedPassword"
+          v-if="!checkedPassword && password != ''"
         >
           Entre 4 et 8 caractères et au moins un chiffre
         </div>
@@ -99,13 +99,13 @@
           <span v-else>Inscription</span>
         </button>
       </form>
-      <p v-if="mode == 'login'">
+      <p v-if="mode == 'login'" class="switch">
         Pas encore inscrit ?
         <span class="createAccountBtn" @click="createAccountSwitch()"
           >Créer un compte</span
         >
       </p>
-      <p v-if="mode == 'create'">
+      <p v-if="mode == 'create'" class="switch">
         Déjà inscrit ?
         <span class="createAccountBtn" @click="loginAccountSwitch()"
           >Se connecter</span
@@ -298,6 +298,9 @@ export default {
     }
     .disabled__btn {
       border: 1px $text-color solid;
+    }
+    .switch {
+      margin-top : 1rem;
     }
   }
 }
