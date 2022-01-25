@@ -117,7 +117,6 @@
 
 import { mapState } from "vuex";
 import navBar from "@/components/navBar.vue";
-// import Footer from "@/components/footer.vue";
 
 export default {
   name: "Account",

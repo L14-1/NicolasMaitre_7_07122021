@@ -33,6 +33,12 @@
           alt="image de déscription"
           :src="urlImage"
         />
+        <font-awesome-icon
+            class="deleteUrlImage"
+            :icon="['fas', 'times']"
+            @click="deleteUrlImage"
+            v-if="urlImage && mode == 'writeAPost'"
+          />
         <div class="write-a-post__btns">
           <input
             type="file"
@@ -45,7 +51,7 @@
           </transition>
           <transition name="fade">
           <button
-            v-if="mode == 'writeAPost' && content != ''"
+            v-if="mode == 'writeAPost' && content.length >= 5"
             @click.prevent="createPost()"
           >
             <font-awesome-icon :icon="['fas', 'paper-plane']" />
@@ -283,6 +289,10 @@ export default {
       this.attachment = event.target.files[0];
       this.urlImage = URL.createObjectURL(this.attachment);
     },
+    deleteUrlImage() {
+      this.attachment = null;
+      this.urlImage = null;
+    },
     createPost: function () {
       const self = this;
       const formData = new FormData();
@@ -448,6 +458,7 @@ export default {
     }
   }
   .write-a-post {
+    position : relative;
     padding: 1rem 0;
     border-radius: 1rem;
     background-color: $box-color;
@@ -467,6 +478,15 @@ export default {
       object-fit: cover;
       width : 80%;
       border-radius: 0.5rem;
+    }
+    .deleteUrlImage {
+      position : absolute;
+      top : 10rem;
+      right : 12%;
+      cursor: pointer;
+      &:hover {
+        color : red;
+      }
     }
     &__btns {
       display: flex;
